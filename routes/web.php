@@ -55,6 +55,7 @@ Route::prefix('admin')
     Route::resource('/permohonan', PermohonanController::class);
     Route::get('permohonan/download/{id}', [PermohonanController::class, 'download_permohonan'])->name('download-permohonan');
     Route::post('/permohonan/verification/{id}', [PermohonanController::class,'verification'])->name('permohonan.verification');
+    Route::get('permohonan/print/cetak_laporan',[PermohonanController::class,'cetak_laporan'])->name('permohonan.cetak-laporan');
 
     Route::resource('/recomendation', RecomendationController::class);
     Route::post('/recomendation/verification/{id}', [RecomendationController::class,'verification'])->name('recomendation.verification');
@@ -68,6 +69,7 @@ Route::prefix('admin')
     Route::get('keterangan/download/{id}', [KeteranganController::class, 'download_keterangan'])->name('download-keterangan');
     Route::get('keterangan/print/create',[KeteranganController::class,'print'])->name('keterangan.print');
     Route::get('keterangan/print/cetak/{id}',[KeteranganController::class,'cetak'])->name('keterangan.cetak');
+    Route::get('keterangan/print/show/{id}',[KeteranganController::class,'show'])->name('keterangan.show');
     Route::get('keterangan/print/cetak_laporan',[KeteranganController::class,'cetak_laporan'])->name('keterangan.cetak-laporan');
 
     Route::resource('/pemberitahuan', PemberitahuanController::class);

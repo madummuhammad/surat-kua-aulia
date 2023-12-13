@@ -83,9 +83,10 @@
 	<thead>
 		<tr>
 			<th>Nomor Surat</th>
-			<th>Perihal</th>
-			<th>Alamat Pengiriman</th>
+			<th>Nama</th>
 			<th>Tanggal</th>
+			<th>Alamat</th>
+			<th>NIK</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -95,13 +96,15 @@
 				{{$item->no_surat}}
 			</td>
 			<td>
-				Keterangan Nikah Tidak Tercatat
+				{{$item->laki->nama}}
 			</td>
 			<td>
-				{{$item->alamat}}
+				{{$item->created_at->format('d-m-Y')}}
 			</td>
 			<td>
-				{{$item->tgl_masuk}}
+				{{$item->laki->alamat}}
+			</td><td>
+				{{$item->laki->nik}}
 			</td>
 		</tr>
 		@endforeach

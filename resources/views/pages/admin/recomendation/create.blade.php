@@ -202,7 +202,7 @@ Tambah Surat
                             <div class="mb-3 row">
                                 <label for="nama_perempuan" class="col-sm-3 col-form-label">Nama</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control @error('nama_perempuan') is-invalid @enderror" value="{{ old('nama_perempuan') }}" name="nama_perempuan" placeholder="Nama Calon Laki-laki.." >
+                                    <input type="text" class="form-control @error('nama_perempuan') is-invalid @enderror" value="{{ old('nama_perempuan') }}" name="nama_perempuan" placeholder="Nama Calon Perempuan.." >
                                 </div>
                                 @error('nama_perempuan')
                                 <div class="invalid-feedback">
@@ -213,7 +213,7 @@ Tambah Surat
                             <div class="mb-3 row">
                                 <label for="bin_binti_perempuan" class="col-sm-3 col-form-label">Bin Binti</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control @error('bin_binti_perempuan') is-invalid @enderror" value="{{ old('bin_binti_perempuan') }}" name="bin_binti_perempuan" placeholder="Bin binti Laki-laki.." >
+                                    <input type="text" class="form-control @error('bin_binti_perempuan') is-invalid @enderror" value="{{ old('bin_binti_perempuan') }}" name="bin_binti_perempuan" placeholder="Bin binti Perempuan.." >
                                 </div>
                                 @error('bin_binti_perempuan')
                                 <div class="invalid-feedback">
@@ -248,7 +248,7 @@ Tambah Surat
                             <div class="mb-3 row">
                                 <label for="nama" class="col-sm-3 col-form-label">NIK</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control @error('nik_perempuan') is-invalid @enderror" value="{{ old('nik_perempuan') }}" name="nik_perempuan" placeholder="NIK Calon Laki-laki.." >
+                                    <input type="text" class="form-control @error('nik_perempuan') is-invalid @enderror" value="{{ old('nik_perempuan') }}" name="nik_perempuan" placeholder="NIK Calon Perempuan.." >
                                 </div>
                                 @error('nik_perempuan')
                                 <div class="invalid-feedback">
@@ -352,7 +352,7 @@ Tambah Surat
                         <div class="col-sm-9">
                             <select name="pegawai" class="form-control selectx" >
                                 @foreach($pegawai as $pegawai)
-                                <option value="{{$pegawai->nik}}">{{$pegawai->nama}}</option>
+                                <option value="{{$pegawai->nik}}">{{$pegawai->jabatan}}</option>
                                 @endforeach
                             </select>
                         </div>

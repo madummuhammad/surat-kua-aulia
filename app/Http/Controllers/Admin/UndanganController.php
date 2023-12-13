@@ -31,7 +31,7 @@ class UndanganController extends Controller
                     <i class="fas fa-edit"></i> &nbsp; Ubah
                     </a>
                     <a class="btn btn-secondary btn-xs" href="' . route('undangan.cetak', $item->id) . '">
-                    <i class="fas fa-download"></i> &nbsp; Donwload
+                    <i class="fas fa-download"></i> &nbsp; Download
                     </a>
                     <form action="' . route('undangan.destroy', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan menghapus item ini secara permanen dari situs anda?'".')">
                     ' . method_field('delete') . csrf_field() . '
@@ -59,6 +59,12 @@ class UndanganController extends Controller
                     </button>
                     </form>
                     ';
+                } 
+
+                if(auth()->user()->jabatan=='Penghulu' AND $item->status==1){ 
+                    $buttons.=' <a class="btn btn-secondary btn-xs" href="' . route('undangan.cetak', $item->id) . '">
+                    <i class="fas fa-download"></i> &nbsp; Detail
+                    </a>';
                 }
 
                 return $buttons;

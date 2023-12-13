@@ -36,9 +36,16 @@ Permohonan
                 <div class="card card-header-actions mb-4">
                     <div class="card-header text-success">
                         List Permohonan
+                        @if(auth()->user()->jabatan!=='Kepala KUA')
                         <a class="btn btn-sm btn-success" href="{{ route('permohonan.create') }}">
                             Tambah Permohonan
                         </a>
+                        @endif
+                         @if(auth()->user()->jabatan=='Kepala KUA')
+                        <a class="btn btn-sm btn-primary" href="{{ route('permohonan.cetak-laporan') }}">
+                            Cetak Laporan
+                        </a>
+                        @endif
                     </div>
                     <div class="card-body">
                         {{-- Alert --}}

@@ -86,6 +86,14 @@ class PermohonanController extends Controller
         return view('pages.admin.permohonan.create');
     }
 
+    public function cetak_laporan()
+    {
+        $query = Permohonan::latest()->get();
+        return view('pages.admin.permohonan.laporan',[
+            'item'=>$query
+        ]);
+    }
+
     public function download_permohonan($id)
     {
         $item = Permohonan::findOrFail($id);

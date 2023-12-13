@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Surat Rekomendasi Nikah</title>
+	<title>Laporan Permohonan</title>
 </head>
 <body>
 	<style>
@@ -59,7 +59,7 @@
 		<img height="2px" width="100%" src="{{url('admin/assets/img/line.png')}}" alt="">
 	</div>
 	<div>
-		<h3 style="text-align: center;">Laporan Surat Rekomendasi Nikah</h3>
+		<h3 style="text-align: center;">Laporan Surat Permohonan</h3>
 	</div>
 </body>
 <style>
@@ -82,29 +82,33 @@
 <table>
 	<thead>
 		<tr>
-			<th>Nomor Surat</th>
+			<th>No</th>
+			<th>Alamat</th>
 			<th>Nama</th>
 			<th>Tanggal</th>
-			<th>Alamat</th>
-			<th>NIK</th>
+			<th>Jenis Kelamin</th>
 		</tr>
 	</thead>
 	<tbody>
+		@php
+		$no=1;
+		@endphp
 		@foreach($item as $item)
 		<tr>
 			<td>
-				{{$item->no_surat}}
+				{{$no++}}
 			</td>
 			<td>
-				{{$item->laki->nama}}
+				{{$item->nama}}
 			</td>
 			<td>
-				{{$item->created_at->format('d-m-Y')}}
+				{{$item->alamat}}
 			</td>
 			<td>
-				{{$item->laki->alamat}}
-			</td><td>
-				{{$item->laki->nik}}
+				{{ $item->created_at->format('Y-m-d') }}
+			</td>
+			<td>
+				{{$item->jenis_kelamin}}
 			</td>
 		</tr>
 		@endforeach

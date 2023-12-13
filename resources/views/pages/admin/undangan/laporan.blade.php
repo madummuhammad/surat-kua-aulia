@@ -82,15 +82,21 @@
 <table>
 	<thead>
 		<tr>
+			<th>No</th>
 			<th>Nomor Undangan</th>
 			<th>Perihal</th>
-			<th>Isi Undangan</th>
-			<th>Tanggal Keluar</th>
+			<th>Sifat</th>
 		</tr>
 	</thead>
 	<tbody>
+		@php
+		$no=1;
+		@endphp
 		@foreach($item as $item)
 		<tr>
+			<td>
+				{{$no++}}
+			</td>
 			<td>
 				{{$item->no_undangan}}
 			</td>
@@ -98,10 +104,7 @@
 				{{$item->perihal}}
 			</td>
 			<td>
-				{{$item->isi_undangan}}
-			</td>
-			<td>
-				{{$item->tgl_keluar}}
+				{{$item->sifat}}
 			</td>
 		</tr>
 		@endforeach

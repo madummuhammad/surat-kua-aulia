@@ -69,11 +69,11 @@
 		<img height="2px" width="100%" src="{{url('admin/assets/img/line.png')}}" alt="">
 	</div>
 	<div>
-		<h4 style="text-decoration: underline; text-align:center;margin-top: 20px;">SURAT KETERANGAN NIKAH TIDAK TERCATAT</h4>
+		<h4 style="text-decoration: underline; text-align:center;margin-top: 20px;">SURAT KETERANGAN PERNAH MENIKAH</h4>
 		<p style="text-align: center;">Nomor: {{$item['no_surat']}}</p>
 	</div>
 	<div>
-		<p>&emsp;&emsp;Yang bertanda tangan di bawah ini kami Kepala KUA Gondokusuman Kota Yogyakarta, menerangkan bahwa:</p>
+		<p>&emsp;&emsp;Yang bertanda tangan di bawah ini kami Kepala KUA Gondokusuman menerangkan bahwa:</p>
 	</div>
 
 	<div>
@@ -112,6 +112,9 @@
 		</table>
 	</div>
 	<div>
+		<p>&emsp;&emsp;Bahwa pernmah menikah sya secara agama Islam dengan seorang Perempuan:</p>
+	</div>
+	<div>
 		<h4 style="font-size: 16px;">Istri</h4>
 		<table>
 			<tr>
@@ -147,16 +150,11 @@
 		</table>
 	</div>
 	<div>
-		<p>&emsp;&emsp;Berdasarkan Surat Keterangan Pernah Menikah yang dikeluarkan oleh kepala Kelurahan ......., Nomor:............... tanggal, ... ............. ......., bahwa yang bersangkutan di atas pernah melakukan pernikahan pada tahun ........., setelah dilakukan pemeriksaan dokumen nikah dengan teliti, yang bersangkutan di atas belum/tidak tercatat pada Kantor Urusan Agama Kecamatan Gondokusuman.</p>
-		<p>Demikian surat keterangan ini kami buat untuk digunakan Mengikuti Sidang Itsbat Nikah di Pengadilan Agama Kota Yogyakarta</p>
+		<p>&emsp;&emsp;Dengan ini surat keterangan ini dibuat dengan sebenarnya dan diberikan kepada yang berkepentingan untuk digunakan seperlunya.</p>
 	</div>
 	<div style="margin-right: 50px;margin-top: 20px;" class="d-flex justify-content-end">
 		<div class="text-center">
 			@if($item->pegawai->jabatan=='Kepala KUA')
-			<p>Dikeluarkan di : Gondokusuman</p>
-			<p>
-			Pada tanggal :... ............ @php echo date('Y') @endphp
-			</p>
 			<p>Kepala KUA Kecamatan</p>
 			@endif
 			@if($item->pegawai->jabatan=='Penghulu')
@@ -171,6 +169,6 @@
 	</div>
 </body>
 <script>
-	window.print()
+	// window.print()
 </script>
 </html>

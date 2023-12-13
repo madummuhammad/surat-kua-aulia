@@ -11,6 +11,7 @@ use App\Models\Recomendation;
 use App\Models\Pegawai;
 use App\Models\CatinLaki;
 use App\Models\CatinPerempuan;
+use App\Rules\MinUmur;
 
 class RecomendationController extends Controller
 {
@@ -134,7 +135,7 @@ public function store(Request $request)
         "pekerjaan_laki_laki"=> "required",
         "warga_negara_laki_laki"=> "required",
         "tempat_lahir_laki_laki"=> "required",
-        "tgl_lahir_laki_laki"=> "required",
+        "tgl_lahir_laki_laki" => ["required", new MinUmur(17)],
         "agama_laki_laki"=> "required",
         "nama_perempuan"=> "required",
         "alamat_perempuan"=> "required",
@@ -143,7 +144,7 @@ public function store(Request $request)
         "pekerjaan_perempuan"=> "required",
         "warga_negara_perempuan"=> "required",
         "tempat_lahir_perempuan"=> "required",
-        "tgl_lahir_perempuan"=> "required",
+        "tgl_lahir_perempuan" => ["required", new MinUmur(17)],
         "agama_perempuan"=> "required",
         "pegawai"=> "required"
     ]);

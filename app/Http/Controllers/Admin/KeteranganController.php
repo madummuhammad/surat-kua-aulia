@@ -10,6 +10,7 @@ use App\Models\Keterangan;
 use App\Models\Pegawai;
 use App\Models\Suami;
 use App\Models\Istri;
+use App\Rules\MinUmur;
 
 class KeteranganController extends Controller
 {
@@ -48,7 +49,7 @@ class KeteranganController extends Controller
                     }
 
                     if($item->status==0 AND auth()->user()->jabatan=='Penghulu'){
-                        $buttons .='<a class="btn btn-secondary btn-xs" href="' . route('keterangan.cetak', $item->id) . '">
+                        $buttons .='<a class="btn btn-secondary btn-xs" href="' . route('keterangan.show', $item->id) . '">
                         <i class="fas fa-eye"></i> &nbsp; Lihat
                         </a>';
                     }
@@ -105,6 +106,14 @@ class KeteranganController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $item = Keterangan::where('id',$id)->with('laki','perempuan','pegawai')->first();
+        return view('pages.admin.keterangan.show',[
+            'item'=>$item
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -114,13 +123,13 @@ class KeteranganController extends Controller
             "nik_laki_laki"=> "required",
             "pekerjaan_laki_laki"=> "required",
             "tempat_lahir_laki_laki"=> "required",
-            "tgl_lahir_laki_laki"=> "required",
+            "tgl_lahir_laki_laki" => ["required", new MinUmur(17)],
             "nama_perempuan"=> "required",
             "alamat_perempuan"=> "required",
             "nik_perempuan"=> "required",
             "pekerjaan_perempuan"=> "required",
             "tempat_lahir_perempuan"=> "required",
-            "tgl_lahir_perempuan"=> "required",
+            "tgl_lahir_perempuan" => ["required", new MinUmur(17)],
             "pegawai"=> "required"
         ]);
 
@@ -168,10 +177,6 @@ class KeteranganController extends Controller
         return Storage::download($item->file_surat);
     }
 
-    public function show($id)
-    {
-        //
-    }
 
     public function edit($id)
     {

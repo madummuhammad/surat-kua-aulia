@@ -50,25 +50,25 @@
                 <div class="nav-link-icon"><i data-feather="keterangan"></i></div>
                 Keterangan Nikah Tidak Tercatat
             </a>
-            <a class="nav-link {{ (request()->is('admin/pemberitahuan*')) ? 'active' : '' }}" href="{{ route('pemberitahuan.index') }}">
+            <!-- <a class="nav-link {{ (request()->is('admin/pemberitahuan*')) ? 'active' : '' }}" href="{{ route('pemberitahuan.index') }}">
                 <div class="nav-link-icon"><i data-feather="pemberitahuan"></i></div>
                 Pemberitahuan Kekurangan Syarat Pernikahan
-            </a>
+            </a> -->
             @if(auth()->user()->jabatan!=='Masyarakat')
             <div class="dropdown-divider"></div>
             <div class="nav-link">Surat Keluar</div>
-            <a class="nav-link {{ (request()->is('admin/nikah*')) ? 'active' : '' }}" href="{{ route('nikah.index') }}">
+          <!--   <a class="nav-link {{ (request()->is('admin/nikah*')) ? 'active' : '' }}" href="{{ route('nikah.index') }}">
                 <div class="nav-link-icon"><i data-feather="nikah"></i></div>
                 Permintaan Buku Nikah & Akta Nikah
-            </a>
+            </a> -->
             <a class="nav-link {{ (request()->is('admin/undangan*')) ? 'active' : '' }}" href="{{ route('undangan.index') }}">
                 <div class="nav-link-icon"><i data-feather="undangan"></i></div>
                 Undangan
             </a>
-            <a class="nav-link {{ (request()->is('admin/disposisi*')) ? 'active' : '' }}" href="{{ route('disposisi.index') }}">
+           <!--  <a class="nav-link {{ (request()->is('admin/disposisi*')) ? 'active' : '' }}" href="{{ route('disposisi.index') }}">
                 <div class="nav-link-icon"><i data-feather="disposisi"></i></div>
                 Disposisi
-            </a>
+            </a> -->
             @endif
 <!--             <div class="dropdown-divider"></div>
             <div class="nav-link">Surat Keluar</div>
