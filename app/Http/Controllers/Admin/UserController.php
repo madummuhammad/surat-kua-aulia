@@ -22,10 +22,10 @@ class UserController extends Controller
             return Datatables::of($query)
             ->addColumn('action', function ($item) {
                 return '
-                <a class="btn btn-primary btn-xs" href="' . route('user.edit', $item->id) . '">
+                <a class="btn btn-primary btn-xs" href="' . route('user.edit', $item->nik) . '">
                 <i class="fas fa-edit"></i> &nbsp; Ubah
                 </a>
-                <form action="' . route('user.destroy', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan menghapus item ini secara permanen dari situs anda?'".')">
+                <form action="' . route('user.destroy', $item->nik) . '" method="POST" onsubmit="return confirm('."'Anda akan menghapus item ini secara permanen dari situs anda?'".')">
                 ' . method_field('delete') . csrf_field() . '
                 <button class="btn btn-danger btn-xs">
                 <i class="far fa-trash-alt"></i> &nbsp; Hapus
@@ -62,7 +62,7 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|max:255',
-            'username' => 'required|unique:users',
+            'nik' => 'required|unique:users|numeric|digits:16',
             'jabatan' => 'required',
             'jenis_kelamin' => 'required',
             'password' => 'required|min:5|max:255',
@@ -103,28 +103,20 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $item = User::findOrFail($id);
+        $item = User::where('nik',$id)->first();
 
         $validatedData = $request->validate([
             'nama' => 'required|max:255',
             'jabatan' => 'required',
             'jenis_kelamin' => 'required',
-        'password' => 'nullable|min:5|max:255', // Jangan wajib, tetapi jika ada, harus sesuai persyaratan
-        'username' => [
-            'required',
-            Rule::unique('users')->ignore($item->id), // Tidak unik untuk akun yang sedang diedit
-        ],
-    ]);
+            'password' => 'nullable|min:5|max:255',
+        ]);
 
-    // Periksa apakah kata sandi diberikan dalam input
         if ($request->has('password')) {
-        // Kata sandi diberikan, maka kita akan mengubahnya
             $validatedData['password'] = bcrypt($validatedData['password']);
         } else {
-        // Kata sandi tidak diberikan, kita akan menggunakan kata sandi yang ada
             unset($validatedData['password']);
         }
-
         $item->update($validatedData);
 
         return redirect()

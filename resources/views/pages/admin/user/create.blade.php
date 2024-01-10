@@ -62,9 +62,9 @@ Tambah Pengguna
                             <!-- Form Group (email address)-->
                             <div class="mb-3">
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="username">Username</label>
-                                    <input class="form-control @error('username') is-invalid @enderror" name="username" type="username" value="{{ old('username') }}" required/>
-                                    @error('username')
+                                    <label class="small mb-1" for="nik">NIK</label>
+                                    <input class="form-control @error('nik') is-invalid @enderror" name="nik" type="nik" value="{{ old('nik') }}" required/>
+                                    @error('nik')
                                     <div class="invalid-feedback">
                                         {{ $message; }}
                                     </div>

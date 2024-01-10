@@ -114,6 +114,14 @@
 		@endforeach
 	</tbody>
 </table>
+<div style="margin-right: 50px;margin-top: 20px;" class="d-flex justify-content-end">
+	<div class="text-center">			
+		<p class="fw-bold">Kepala KUA Kecamatan</p>
+		<p class="fw-bold">GONDOKUSUMAN</p>
+		<P>&emsp;</P>
+		<P class="fw-bold">{{$pegawai->nama}}</P>
+	</div>
+</div>
 <script>
 	window.print()
 </script>

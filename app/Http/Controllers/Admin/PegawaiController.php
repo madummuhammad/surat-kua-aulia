@@ -73,7 +73,7 @@ class PegawaiController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nik' => 'required|unique:pegawai',
+            'nik' => 'required|unique:pegawai|numeric|digits:16',
             'nama' => 'required',
             'alamat' => 'required',
             'jabatan' => 'required',

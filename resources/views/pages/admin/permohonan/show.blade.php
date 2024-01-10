@@ -38,7 +38,7 @@ Detail Permohonan
                                 <tbody>
                                     <tr>
                                         <th>ID Masyarakat</th>
-                                        <td>{{ $item->id_user }}</td>
+                                        <td>{{ $item->nik_user }}</td>
                                     </tr>
                                     <tr>
                                         <th>Nama</th>
@@ -72,9 +72,39 @@ Detail Permohonan
                             </div>
                         </div>
                     </div>
+                    @if($item->file!==null)
+                    <div class="card mb-4">
+                        <div class="card-header text-success">
+                            File Hasil - 
+                            <a href="{{ route('download-hasil', $item->id) }}" class="btn btn-sm btn-primary">  
+                                <i class="fa fa-download" aria-hidden="true"></i> &nbsp; Download Hasil
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3 row">
+                                <embed src="{{ Storage::url($item->file) }}" width="500" height="500" type="application/pdf">
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        @if($item->file_balasan!==null)
+                        <div class="card mb-4">
+                            <div class="card-header text-success">
+                                File Balasan - 
+                                <a href="{{ route('download-balasan', $item->id) }}" class="btn btn-sm btn-primary">  
+                                    <i class="fa fa-download" aria-hidden="true"></i> &nbsp; Download Balasan
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <embed src="{{ Storage::url($item->file_balasan) }}" width="500" height="500" type="application/pdf">
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </main>
-    @endsection
+            </main>
+            @endsection
 

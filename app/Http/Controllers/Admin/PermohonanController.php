@@ -7,6 +7,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Permohonan;
+use App\Models\Pegawai;
 use Illuminate\Http\Request;
 
 class PermohonanController extends Controller
@@ -19,21 +20,30 @@ class PermohonanController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $query = Permohonan::latest()->get();
+            if(auth()->user()->jabatan=='Masyarakat'){
+                $query = Permohonan::where('nik_user',auth()->user()->nik)->latest()->get();
+            } else {
+                $query = Permohonan::latest()->get();
+            }
 
             return Datatables::of($query)
             ->addColumn('action', function ($item) {
                 $buttons = '<a class="btn btn-success btn-xs" href="' . route('permohonan.show', $item->id) . '">
                 <i class="fa fa-search-plus"></i> &nbsp; Detail
                 </a>
-                ';
+                <form action="' . route('permohonan.destroy', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan menghapus item ini secara permanen dari situs anda?'".')">
+                ' . method_field('delete') . csrf_field() . '
+                <button class="btn btn-danger btn-xs">
+                <i class="far fa-trash-alt"></i> &nbsp; Hapus
+                </button>
+                </form>';
                 if(auth()->user()->jabatan=='Masyarakat'){
                     $buttons .='<a class="btn btn-primary btn-xs" href="' . route('permohonan.edit', $item->id) . '">
                     <i class="fas fa-edit"></i> &nbsp; Ubah
                     </a>
                     ';
                 }
-                if(auth()->user()->jabatan=='Penghulu' AND $item->status!=1){
+                if(auth()->user()->jabatan=='Petugas' AND $item->status==NULL && $item->status !==0){
                     $buttons.='
                     <form action="' . route('permohonan.verification', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan memverifikasi surat ini ?'".')">
                     ' . method_field('post') . csrf_field() . '
@@ -42,15 +52,18 @@ class PermohonanController extends Controller
                     Verifikasi
                     </button>
                     </form>
-                    <form action="' . route('permohonan.verification', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan menolak surat ini ?'".')">
-                    ' . method_field('post') . csrf_field() . '
-                    <input name="status" value="0" hidden>
-                    <button class="btn btn-danger btn-xs">
+                    <button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#tolak'.$item->id.'">
                     Tolak
                     </button>
-                    </form>
                     ';
                 }
+                if(auth()->user()->jabatan=='Petugas' AND $item->status==1 AND $item->file==null){
+                    $buttons.='<button class="btn btn-xs btn-primary" data-bs-toggle="modal" data-bs-target="#upload'.$item->id.'">Upload</button>';
+                };
+
+                if(auth()->user()->jabatan=='Masyarakat' AND $item->status==1 AND $item->file!==null AND $item->file_balasan==null){
+                    $buttons.='<button class="btn btn-xs btn-warning" data-bs-toggle="modal" data-bs-target="#uploadbalasan'.$item->id.'">Upload Balasan</button>';
+                };
                 return $buttons;
             })
             ->addIndexColumn()
@@ -58,18 +71,21 @@ class PermohonanController extends Controller
             ->rawColumns(['action','name'])
             ->make();
         }
-        return view('pages.admin.permohonan.index');
+        $permohonan = Permohonan::latest()->get();
+        return view('pages.admin.permohonan.index',[
+            'item'=>$permohonan
+        ]);
     }
 
     public function verification($id)
     {
         $item = Permohonan::findorFail($id);
-
-        $item->update(['status'=>request('status')]);
-
         $status='verifikasi';
         if(request('status')==0){
             $status='tolak';
+            $item->update(['status'=>request('status'),'alasan_ditolak'=>request('alasan_penolakan')]);
+        } else {
+            $item->update(['status'=>request('status')]);
         }
         return redirect()
         ->route('permohonan.index')
@@ -89,8 +105,10 @@ class PermohonanController extends Controller
     public function cetak_laporan()
     {
         $query = Permohonan::latest()->get();
+        $pegawai=Pegawai::where('jabatan','Kepala KUA')->first();
         return view('pages.admin.permohonan.laporan',[
-            'item'=>$query
+            'item'=>$query,
+            'pegawai'=>$pegawai
         ]);
     }
 
@@ -99,6 +117,20 @@ class PermohonanController extends Controller
         $item = Permohonan::findOrFail($id);
 
         return Storage::download($item->file_permohonan);
+    }
+
+    public function download_hasil($id)
+    {
+        $item = Permohonan::findOrFail($id);
+
+        return Storage::download($item->file);
+    }
+
+    public function download_balasan($id)
+    {
+        $item = Permohonan::findOrFail($id);
+
+        return Storage::download($item->file_balasan);
     }
 
     /**
@@ -115,7 +147,7 @@ class PermohonanController extends Controller
             'jenis_kelamin' => 'required',
             'file_permohonan' => 'required|mimes:pdf|file',
         ]);
-        $validatedData['id_user']=auth()->user()->id;
+        $validatedData['nik_user']=auth()->user()->nik;
         if($request->file('file_permohonan')){
             $validatedData['file_permohonan'] = $request->file('file_permohonan')->store('assets/file-permohonan');
         }
@@ -126,6 +158,34 @@ class PermohonanController extends Controller
         return redirect()
         ->route('permohonan.index')
         ->with('success', 'Sukses! 1 Data Berhasil Disimpan');
+    }
+
+    public function upload(Request $request,$id)
+    {
+        $file=null;
+        if($request->file('file')){
+            $file = $request->file('file')->store('assets/file');
+        }
+
+        Permohonan::where('id',$id)->update([
+            'file'=>$file
+        ]);
+
+        return back();
+    }
+
+    public function upload_balasan(Request $request,$id)
+    {
+        $file=null;
+        if($request->file('file')){
+            $file = $request->file('file')->store('assets/file');
+        }
+
+        Permohonan::where('id',$id)->update([
+            'file_balasan'=>$file
+        ]);
+
+        return back();
     }
 
     /**
@@ -174,6 +234,12 @@ class PermohonanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $item = Permohonan::findorFail($id);
+
+        $item->delete();
+
+        return redirect()
+        ->route('permohonan.index')
+        ->with('success', 'Sukses! 1 Data Berhasil Dihapus');
     }
 }

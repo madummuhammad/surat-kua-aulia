@@ -85,9 +85,11 @@ class UndanganController extends Controller
 
     public function cetak_laporan()
     {
+        $pegawai=Pegawai::where('jabatan','Kepala KUA')->first();
         $query = Undangan::latest()->get();
         return view('pages.admin.undangan.laporan',[
-            'item'=>$query
+            'item'=>$query,
+            'pegawai'=>$pegawai
         ]);
     }
 

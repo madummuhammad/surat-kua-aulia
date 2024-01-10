@@ -99,11 +99,28 @@ Dashboard
                     </div> -->
                 </div>
             </div>
+            <div class="col-lg-12 col-xl-4 mb-4">
+                <div class="card bg-secondary text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Permohonan Surat</div>
+                                <div class="text-lg fw-bold">{{$permohonan}}</div>
+                            </div>
+                            <i class="feather-xl text-white-50" data-feather="mail"></i>
+                        </div>
+                    </div>
+                    <!-- <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="text-white stretched-link" href="">Selengkapnya</a>
+                        <div class="text-white"><i class="fas fa-angle-right"></i></div>
+                    </div> -->
+                </div>
+            </div>
             <div class="col-lg-12">
-             <canvas id="myChart" width="400" height="200"></canvas>
-         </div>
-     </div>
- </div>
+               <canvas id="myChart" width="400" height="200"></canvas>
+           </div>
+       </div>
+   </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @php
@@ -129,25 +146,13 @@ for ($i = 1; $i <= 12; $i++) {
     ->whereMonth('created_at', $i)
     ->count();
 
-    $pemberitahuan=Pemberitahuan::whereYear('created_at', now()->year)
-    ->whereMonth('created_at', $i)
-    ->count();
-
-    $suratMasukArray[] = $recomendation+$keterangan+$pemberitahuan;
-
-    $nikah = Nikah::whereYear('created_at', now()->year)
-    ->whereMonth('created_at', $i)
-    ->count();
+    $suratMasukArray[] = $recomendation+$keterangan;
 
     $undangan = Undangan::whereYear('created_at', now()->year)
     ->whereMonth('created_at', $i)
     ->count();
 
-    $disposisi = Disposisi::whereYear('created_at', now()->year)
-    ->whereMonth('created_at', $i)
-    ->count();
-
-    $suratKeluarArray[] = $nikah+$undangan+$disposisi;
+    $suratKeluarArray[] = $undangan;
 
     $pegawai = User::where('jabatan','Petugas')->whereYear('created_at', now()->year)
     ->whereMonth('created_at', $i)

@@ -18,17 +18,18 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            'username' => 'required',
+            'nik' => 'required',
             'password' => 'required'
         ]);
 
         if(Auth::attempt($credentials))
         {
             $request->session()->regenerate();
-            return redirect()->intended('admin/dashboard');
+            // return redirect()->intended('admin/dashboard');
+            return redirect('admin/dashboard');
         }
 
-        return back()->with('loginError', 'Login Gagal! Username atau password salah');
+        return back()->with('loginError', 'Login Gagal! Nik atau password salah');
     }
 
     public function register()
@@ -42,13 +43,12 @@ class LoginController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|max:255',
-            'username' => 'required|unique:users',
-            'jenis_kelamin' => 'required',
+            'nik' => 'required|unique:users|numeric|digits:16',
             'password' => 'required|min:5|max:255',
         ]);
 
         // return request();
-
+        $validatedData['jenis_kelamin']=null;
         $validatedData['password'] = Hash::make($validatedData['password']);
         $validatedData['jabatan']='Masyarakat';
 

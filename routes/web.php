@@ -54,6 +54,10 @@ Route::prefix('admin')
     
     Route::resource('/permohonan', PermohonanController::class);
     Route::get('permohonan/download/{id}', [PermohonanController::class, 'download_permohonan'])->name('download-permohonan');
+    Route::get('permohonan/download_hasil/{id}', [PermohonanController::class, 'download_hasil'])->name('download-hasil');
+    Route::get('permohonan/download_balasan/{id}', [PermohonanController::class, 'download_balasan'])->name('download-balasan');
+    Route::post('permohonan/upload/{id}', [PermohonanController::class, 'upload'])->name('permohonan.upload');
+    Route::post('permohonan/upload_balasan/{id}', [PermohonanController::class, 'upload_balasan'])->name('permohonan.upload_balasan');
     Route::post('/permohonan/verification/{id}', [PermohonanController::class,'verification'])->name('permohonan.verification');
     Route::get('permohonan/print/cetak_laporan',[PermohonanController::class,'cetak_laporan'])->name('permohonan.cetak-laporan');
 

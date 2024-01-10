@@ -44,7 +44,7 @@ Ubah Pengguna
                             <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         @endif
-                        <form action="{{ route('user.update', $item->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('user.update', $item->nik) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <!-- Form Row-->
@@ -63,9 +63,9 @@ Ubah Pengguna
                             <!-- Form Group (email address)-->
                             <div class="mb-3">
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="email">Username</label>
-                                    <input class="form-control @error('username') is-invalid @enderror" name="username" type="text" value="{{ $item->username }}" required/>
-                                    @error('username')
+                                    <label class="small mb-1" for="email">NIK</label>
+                                    <input class="form-control @error('nik') is-invalid @enderror" name="nik" type="text" value="{{ $item->nik }}" required/>
+                                    @error('nik')
                                     <div class="invalid-feedback">
                                         {{ $message; }}
                                     </div>

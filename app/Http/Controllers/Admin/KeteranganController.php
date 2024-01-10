@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Keterangan;
 use App\Models\Pegawai;
 use App\Models\Suami;
+use App\Models\Permohonan;
 use App\Models\Istri;
 use App\Rules\MinUmur;
 
@@ -79,9 +80,11 @@ class KeteranganController extends Controller
 
     public function create()
     {
+        $permohonan=Permohonan::get();
         $pegawai=Pegawai::get();
         return view('pages.admin.keterangan.create',[
-            'pegawai'=>$pegawai
+            'pegawai'=>$pegawai,
+            'permohonan'=>$permohonan
         ]);
     }
 
@@ -93,16 +96,20 @@ class KeteranganController extends Controller
     public function cetak_laporan()
     {
         $query = Keterangan::latest()->get();
+        $pegawai=Pegawai::where('jabatan','Kepala KUA')->first();
         return view('pages.admin.keterangan.laporan',[
-            'item'=>$query
+            'item'=>$query,
+            'pegawai'=>$pegawai
         ]);
     }
 
     public function cetak($id)
     {
+        $pegawai=Pegawai::where('jabatan','Kepala KUA')->first();
         $item = Keterangan::where('id',$id)->with('laki','perempuan','pegawai')->first();
         return view('pages.admin.keterangan.cetak',[
-            'item'=>$item
+            'item'=>$item,
+            'pegawai'=>$pegawai
         ]);
     }
 
@@ -120,13 +127,13 @@ class KeteranganController extends Controller
             "nama_laki_laki"=> "required",
             "alamat_laki_laki"=> "required",
             "jenis_kelamin_laki_laki"=> "required",
-            "nik_laki_laki"=> "required",
+            "nik_laki_laki"=> "required|numeric|digits:16",
             "pekerjaan_laki_laki"=> "required",
             "tempat_lahir_laki_laki"=> "required",
             "tgl_lahir_laki_laki" => ["required", new MinUmur(17)],
             "nama_perempuan"=> "required",
             "alamat_perempuan"=> "required",
-            "nik_perempuan"=> "required",
+            "nik_perempuan"=> "required|numeric|digits:16",
             "pekerjaan_perempuan"=> "required",
             "tempat_lahir_perempuan"=> "required",
             "tgl_lahir_perempuan" => ["required", new MinUmur(17)],

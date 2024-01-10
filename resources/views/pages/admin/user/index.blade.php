@@ -64,7 +64,7 @@ Pengguna
                                 <tr>
                                     <th width="10">No.</th>
                                     <th>Nama</th>
-                                    <th>Username</th>
+                                    <th>NIK</th>
                                     <th>Jabatan</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Aksi</th>
@@ -96,7 +96,7 @@ Pengguna
         searchable: false
     },
     { data: 'nama', name: 'nama' },
-    { data: 'username', name: 'username' },
+    { data: 'nik', name: 'nik' },
     { data: 'jabatan', name: 'jabatan' },
     { data: 'jenis_kelamin', name: 'jenis_kelamin' },
     { 

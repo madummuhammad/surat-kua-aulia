@@ -1,6 +1,13 @@
 @extends('layouts.auth')
 
 @section('main')
+<style>
+    body{
+        background-image: url('admin/assets/img/kua.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
 <main>
     <div class="container-xl px-4">
         <div class="row justify-content-center">
@@ -63,27 +70,13 @@
                                 @enderror
                             </div>
                              <div class="mb-3">
-                                <label class="small mb-1" for="username">Username</label>
-                                <input class="form-control @error('username') is-invalid @enderror" id="username" name="username" type="text" value="{{ old('username') }}" placeholder="Enter username" autofocus required/>
-                                @error('username')
+                                <label class="small mb-1" for="nik">NIK</label>
+                                <input class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" type="text" value="{{ old('nik') }}" placeholder="Enter nik" autofocus required/>
+                                @error('nik')
                                 <div class="invalid-feedback">
                                     {{ $message; }}
                                 </div>
                                 @enderror
-                            </div>
-                            <div class="mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="jenis_kelamin">Jenis Kelamin</label>
-                                    <select name="jenis_kelamin" id="" class="form-select">
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
-                                    @error('jenis_kelamin')
-                                    <div class="invalid-feedback">
-                                        {{ $message; }}
-                                    </div>
-                                    @enderror
-                                </div>   
                             </div>
                             <!-- Form Group (password)-->
                             <div class="mb-3">

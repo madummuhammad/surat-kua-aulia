@@ -12,6 +12,7 @@ use App\Models\Pegawai;
 use App\Models\CatinLaki;
 use App\Models\CatinPerempuan;
 use App\Rules\MinUmur;
+use App\Models\Permohonan;
 
 class RecomendationController extends Controller
 {
@@ -77,14 +78,17 @@ class RecomendationController extends Controller
             ->rawColumns(['action','name'])
             ->make();
         }
+        
         return view('pages.admin.recomendation.index');
     }
 
     public function create()
     {
         $pegawai=Pegawai::get();
+        $permohonan=Permohonan::get();
         return view('pages.admin.recomendation.create',[
-            'pegawai'=>$pegawai
+            'pegawai'=>$pegawai,
+            'permohonan'=>$permohonan
         ]);
     }
 
@@ -95,22 +99,24 @@ class RecomendationController extends Controller
 
     public function cetak_laporan()
     {
+        $pegawai=Pegawai::where('jabatan','Kepala KUA')->first();
         $query = Recomendation::latest()->get();
         return view('pages.admin.recomendation.laporan',[
-            'item'=>$query
+            'item'=>$query,
+            'pegawai'=>$pegawai
         ]);
     }
 
     public function cetak($id)
     {
-     $item = Recomendation::where('id',$id)->with('laki','perempuan','pegawai')->first();
-     return view('pages.admin.recomendation.cetak',[
+       $item = Recomendation::where('id',$id)->with('laki','perempuan','pegawai')->first();
+       return view('pages.admin.recomendation.cetak',[
         'item'=>$item
     ]);
- }
+   }
 
- public function show($id)
- {
+   public function show($id)
+   {
     return 'asdf';
 }
 
@@ -131,7 +137,7 @@ public function store(Request $request)
         "status_perkawinan_perempuan"=> "required",
         "bin_binti_perempuan"=> "required",
         "jenis_kelamin_laki_laki"=> "required",
-        "nik_laki_laki"=> "required",
+        "nik_laki_laki"=> "required|numeric|digits:16",
         "pekerjaan_laki_laki"=> "required",
         "warga_negara_laki_laki"=> "required",
         "tempat_lahir_laki_laki"=> "required",
@@ -140,7 +146,7 @@ public function store(Request $request)
         "nama_perempuan"=> "required",
         "alamat_perempuan"=> "required",
         "jenis_kelamin_perempuan"=> "required",
-        "nik_perempuan"=> "required",
+        "nik_perempuan"=> "required|numeric|digits:16",
         "pekerjaan_perempuan"=> "required",
         "warga_negara_perempuan"=> "required",
         "tempat_lahir_perempuan"=> "required",

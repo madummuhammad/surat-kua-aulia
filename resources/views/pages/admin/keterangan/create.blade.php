@@ -55,7 +55,13 @@ Tambah Surat
                                 <div class="mb-3 row">
                                     <label for="nama" class="col-sm-3 col-form-label">Nama</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control @error('nama_laki_laki') is-invalid @enderror" value="{{ old('nama_laki_laki') }}" name="nama_laki_laki" placeholder="Nama Suami.." >
+                                        <input type="text" id="nama_laki_laki" name="nama_laki_laki" hidden>
+                                        <select name="permohonan" class="form-control selectx" id="permohonan">
+                                            <option value="">Pilih Nama</option>
+                                            @foreach($permohonan as $permohonan)
+                                            <option value="{{$permohonan}}">{{$permohonan->nama}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     @error('nama_laki_laki')
                                     <div class="invalid-feedback">
@@ -66,7 +72,7 @@ Tambah Surat
                                 <div class="mb-3 row">
                                     <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control @error('alamat_laki_laki') is-invalid @enderror" value="{{ old('alamat_laki_laki') }}" name="alamat_laki_laki" placeholder="Alamat.." >
+                                        <input type="text" id="alamat" class="form-control @error('alamat_laki_laki') is-invalid @enderror" value="{{ old('alamat_laki_laki') }}" name="alamat_laki_laki" placeholder="Alamat.." >
                                     </div>
                                     @error('alamat_laki_laki')
                                     <div class="invalid-feedback">
@@ -315,6 +321,14 @@ Tambah Surat
         $("[data-bs-target='#contact']").addClass('show');
         $("[data-bs-target='#profile']").removeClass('active');
         $("[data-bs-target='#profile']").removeClass('show');
+    })
+
+    $("#permohonan").on('change',function(){
+        const value=JSON.parse($(this).val());
+        console.log(value)
+        console.log(value.nama)
+        $("#nama_laki_laki").val(value.nama)
+        $("#alamat").val(value.alamat)
     })
 </script>
 @endpush

@@ -37,12 +37,12 @@ Tambah Permohonan
 			<div class="row gx-4">
 				<div class="col-lg-9">
 					<div class="card mb-4">
-						<div class="card-header text-success">Form Undangan</div>
+						<div class="card-header text-success">Form Permohonan</div>
 						<div class="card-body">
 							<div class="mb-3 row">
 								<label for="id_user" class="col-sm-3 col-form-label">ID Masyarakat</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control @error('id_user') is-invalid @enderror" value="{{ auth()->user()->id }}" name="id_user" placeholder="ID Masyarakat.." required readonly>
+									<input type="text" class="form-control @error('id_user') is-invalid @enderror" value="{{ auth()->user()->nik }}" name="id_user" placeholder="ID Masyarakat.." required readonly>
 								</div>
 								@error('id_user')
 								<div class="invalid-feedback">
