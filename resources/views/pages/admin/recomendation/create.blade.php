@@ -32,6 +32,10 @@ Tambah Surat
             <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
+
+        <div id="error-tgl-laki">
+
+        </div>
         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Calon Laki-laki</button>
@@ -64,98 +68,91 @@ Tambah Surat
                                     @enderror
                                 </div> -->
                                 <div class="mb-3 row">
-                                    <label for="permohonan" class="col-sm-3 col-form-label">Nama Laki-laki</label>
-                                    <input type="text" name="nama_laki_laki" id="nama_laki_laki" hidden>
-                                    <div class="col-sm-9">
-                                        <select name="permohonan" class="form-control selectx" id="permohonan">
-                                            <option value="">Pilih Nama</option>
-                                            @foreach($permohonan as $permohonan)
-                                            <option value="{{$permohonan}}">{{$permohonan->nama}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('permohonan')
-                                    <div class="invalid-feedback">
-                                        {{ $message; }}
-                                    </div>
-                                    @enderror
+                                  <label for="nama_laki_laki" class="col-sm-3 col-form-label">Nama Laki-laki</label>
+                                  <div class="col-sm-9">
+                                    <input type="text" class="form-control @error('nama_laki_laki') is-invalid @enderror" value="{{ old('nama_laki_laki') }}" name="nama_laki_laki" placeholder="Nama Laki-laki..." >
                                 </div>
-                                <div class="mb-3 row">
-                                    <label for="bin_binti_laki_laki" class="col-sm-3 col-form-label">Bin Binti</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control @error('bin_binti_laki_laki') is-invalid @enderror" value="{{ old('bin_binti_laki_laki') }}" name="bin_binti_laki_laki" placeholder="Bin binti Laki-laki.." >
-                                    </div>
-                                    @error('bin_binti_laki_laki')
-                                    <div class="invalid-feedback">
-                                        {{ $message; }}
-                                    </div>
-                                    @enderror
+                                @error('nama_laki_laki')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
                                 </div>
-                                <div class="mb-3 row">
-                                    <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="alamat" class="form-control @error('alamat_laki_laki') is-invalid @enderror" value="{{ old('alamat_laki_laki') }}" name="alamat_laki_laki" placeholder="Alamat.." >
-                                    </div>
-                                    @error('alamat_laki_laki')
-                                    <div class="invalid-feedback">
-                                        {{ $message; }}
-                                    </div>
-                                    @enderror
+                                @enderror
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="bin_binti_laki_laki" class="col-sm-3 col-form-label">Bin Binti</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control @error('bin_binti_laki_laki') is-invalid @enderror" value="{{ old('bin_binti_laki_laki') }}" name="bin_binti_laki_laki" placeholder="Bin binti Laki-laki.." >
                                 </div>
-                                <div class="mb-3 row">
-                                    <label for="jenis_kelamin_laki_laki" class="col-sm-3 col-form-label">Jenis Kelamin</label>
-                                    <div class="col-sm-9">
-                                        <select name="jenis_kelamin_laki_laki" class="form-control selectx" >
-                                            <option value="Laki-laki">Laki-laki</option>
-                                        </select>
-                                    </div>
-                                    @error('jenis_kelamin_laki_laki')
-                                    <div class="invalid-feedback">
-                                        {{ $message; }}
-                                    </div>
-                                    @enderror
+                                @error('bin_binti_laki_laki')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
                                 </div>
-                                <div class="mb-3 row">
-                                    <label for="nama" class="col-sm-3 col-form-label">NIK</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control @error('nik_laki_laki') is-invalid @enderror" value="{{ old('nik_laki_laki') }}" name="nik_laki_laki" placeholder="NIK Calon Laki-laki.." >
-                                    </div>
-                                    @error('nik_laki_laki')
-                                    <div class="invalid-feedback">
-                                        {{ $message; }}
-                                    </div>
-                                    @enderror
+                                @enderror
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="alamat" class="form-control @error('alamat_laki_laki') is-invalid @enderror" value="{{ old('alamat_laki_laki') }}" name="alamat_laki_laki" placeholder="Alamat.." >
                                 </div>
+                                @error('alamat_laki_laki')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="jenis_kelamin_laki_laki" class="col-sm-3 col-form-label">Jenis Kelamin</label>
+                                <div class="col-sm-9">
+                                    <select name="jenis_kelamin_laki_laki" class="form-control selectx" >
+                                        <option value="Laki-laki">Laki-laki</option>
+                                    </select>
+                                </div>
+                                @error('jenis_kelamin_laki_laki')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="nama" class="col-sm-3 col-form-label">NIK</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control @error('nik_laki_laki') is-invalid @enderror" value="{{ old('nik_laki_laki') }}" name="nik_laki_laki" placeholder="NIK Calon Laki-laki.." >
+                                </div>
+                                @error('nik_laki_laki')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
+                                </div>
+                                @enderror
+                            </div>
 
-                                <div class="mb-3 row">
-                                    <label for="pekerjaan_laki_laki" class="col-sm-3 col-form-label">Pekerjaan</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control @error('pekerjaan_laki_laki') is-invalid @enderror" value="{{ old('pekerjaan_laki_laki') }}" name="pekerjaan_laki_laki" placeholder="Pekerjaan.." >
-                                    </div>
-                                    @error('pekerjaan_laki_laki')
-                                    <div class="invalid-feedback">
-                                        {{ $message; }}
-                                    </div>
-                                    @enderror
+                            <div class="mb-3 row">
+                                <label for="pekerjaan_laki_laki" class="col-sm-3 col-form-label">Pekerjaan</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control @error('pekerjaan_laki_laki') is-invalid @enderror" value="{{ old('pekerjaan_laki_laki') }}" name="pekerjaan_laki_laki" placeholder="Pekerjaan.." >
                                 </div>
+                                @error('pekerjaan_laki_laki')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
+                                </div>
+                                @enderror
+                            </div>
 
-                                <div class="mb-3 row">
-                                    <label for="warga_negara_laki_laki" class="col-sm-3 col-form-label">Warga Negara</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control @error('warga_negara_laki_laki') is-invalid @enderror" value="{{ old('warga_negara_laki_laki') }}" name="warga_negara_laki_laki" placeholder="Warga negara.." >
-                                    </div>
-                                    @error('warga_negara_laki_laki')
-                                    <div class="invalid-feedback">
-                                        {{ $message; }}
-                                    </div>
-                                    @enderror
+                            <div class="mb-3 row">
+                                <label for="warga_negara_laki_laki" class="col-sm-3 col-form-label">Warga Negara</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control @error('warga_negara_laki_laki') is-invalid @enderror" value="{{ old('warga_negara_laki_laki') }}" name="warga_negara_laki_laki" placeholder="Warga negara.." >
                                 </div>
-                                <div class="mb-3 row">
-                                    <label for="" class="col-sm-3 col-form-label">Tempat, Tanggal Lahir</label>
-                                    <div class="col-sm-9 d-flex ">
-                                        <input type="text" class="form-control @error('tempat_lahir_laki_laki') is-invalid @enderror" value="{{ old('tempat_lahir_laki_laki') }}" name="tempat_lahir_laki_laki" placeholder="Tempat.." >
-                                        <input type="date" class="form-control @error('tgl_lahir_laki_laki') is-invalid @enderror" value="{{ old('tgl_lahir_laki_laki') }}" name="tgl_lahir_laki_laki" placeholder="tgl_lahir_laki_laki.." >
-                                    </div>
+                                @error('warga_negara_laki_laki')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="" class="col-sm-3 col-form-label">Tempat, Tanggal Lahir</label>
+                                <div class="col-sm-9 d-flex ">
+                                    <input type="text" class="form-control @error('tempat_lahir_laki_laki') is-invalid @enderror" value="{{ old('tempat_lahir_laki_laki') }}" name="tempat_lahir_laki_laki" placeholder="Tempat.." >
+                                    <input type="date" class="form-control @error('tgl_lahir_laki_laki') is-invalid @enderror" value="{{ old('tgl_lahir_laki_laki') }}" name="tgl_lahir_laki_laki" placeholder="tgl_lahir_laki_laki.." > </div>
                                     @error('tempat_lahir_laki_laki')
                                     <div class="invalid-feedback">
                                         {{ $message; }}
@@ -202,16 +199,16 @@ Tambah Surat
                                     @enderror
                                 </div>
                                 <div class="mb-3 d-flex justify-content-end">
-                                 <button class="btn btn-success" id="laki_next" type="button">Lanjut</button>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                   <button class="btn btn-success" id="laki_next" type="button">Lanjut</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-               <div class="row gx-4">
+             <div class="row gx-4">
                 <div class="col-lg-9">
                     <div class="card mb-4">
                         <div class="card-header text-success">Form Perempuan</div>
@@ -350,16 +347,16 @@ Tambah Surat
                             </div>
 
                             <div class="mb-3 d-flex justify-content-end">
-                             <button class="btn btn-success" id="perempuan_next" type="button">Lanjut</button>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-     <div class="row gx-4">
+                               <button class="btn btn-success" id="perempuan_next" type="button">Lanjut</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+       <div class="row gx-4">
         <div class="col-lg-9">
             <div class="card mb-4">
                 <div class="card-header text-success">Form Pegawai</div>
@@ -380,12 +377,12 @@ Tambah Surat
                         @enderror
                     </div>
                     <div class="mb-3 d-flex justify-content-end">
-                     <button class="btn btn-success" type="submit">Kirim</button>
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
+                       <button class="btn btn-success" type="submit">Kirim</button>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
 </div>
 </div>
 </form>
@@ -424,28 +421,76 @@ Tambah Surat
     })
 </script>
 <script>
-    $("#laki_next").on('click',function(){
-        $("#profile").addClass('active')
-        $("#profile").addClass('show')
-        $("#home").removeClass('show')
-        $("#home").removeClass('active')
+    $("#laki_next").on('click', function () {
+        var tgl_lahir_laki_laki = $("input[name='tgl_lahir_laki_laki']").val();
+        var currentDate = new Date();
 
-        $("[data-bs-target='#profile']").addClass('active');
-        $("[data-bs-target='#profile']").addClass('show');
-        $("[data-bs-target='#home']").removeClass('active');
-        $("[data-bs-target='#home']").removeClass('show');
-    })
+        var dob = new Date(tgl_lahir_laki_laki);
+        var age = currentDate.getFullYear() - dob.getFullYear();
+
+        if (currentDate.getMonth() < dob.getMonth() || (currentDate.getMonth() === dob.getMonth() && currentDate.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        if (age >= 17) {
+            $("#profile").addClass('active show');
+            $("#home").removeClass('show active');
+            $("[data-bs-target='#profile']").addClass('active show');
+            $("[data-bs-target='#home']").removeClass('active show');
+            $("input[name='tgl_lahir_laki_laki']").removeClass('is-invalid');
+            $("#error-tgl-laki").html(' ')
+        } else {
+            $("input[name='tgl_lahir_laki_laki']").addClass('is-invalid');
+            $("#error-tgl-laki").html(
+                ` <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul>
+                <li>Tanggal lahir laki-laki kurang dari 17 tahun</li>
+                </ul>
+                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`
+                )
+            $("html, body").animate({ scrollTop: 0 });
+        }
+    });
+
 
     $("#perempuan_next").on('click',function(){
-        $("#contact").addClass('active')
-        $("#contact").addClass('show')
-        $("#profile").removeClass('show')
-        $("#profile").removeClass('active')
+        var tgl_lahir_perempuan = $("input[name='tgl_lahir_perempuan']").val();
+        var currentDate = new Date();
 
-        $("[data-bs-target='#contact']").addClass('active');
-        $("[data-bs-target='#contact']").addClass('show');
-        $("[data-bs-target='#profile']").removeClass('active');
-        $("[data-bs-target='#profile']").removeClass('show');
+        var dob = new Date(tgl_lahir_perempuan);
+        var age = currentDate.getFullYear() - dob.getFullYear();
+
+        if (currentDate.getMonth() < dob.getMonth() || (currentDate.getMonth() === dob.getMonth() && currentDate.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        if (age >= 17) {
+
+            $("#contact").addClass('active')
+            $("#contact").addClass('show')
+            $("#profile").removeClass('show')
+            $("#profile").removeClass('active')
+
+            $("[data-bs-target='#contact']").addClass('active');
+            $("[data-bs-target='#contact']").addClass('show');
+            $("[data-bs-target='#profile']").removeClass('active');
+            $("[data-bs-target='#profile']").removeClass('show');
+
+            $("input[name='tgl_lahir_perempuan']").removeClass('is-invalid');
+            $("#error-tgl-laki").html(' ')
+        } else {
+            $("input[name='tgl_lahir_perempuan']").addClass('is-invalid');
+            $("#error-tgl-laki").html(
+                ` <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul>
+                <li>Tanggal lahir perempuan kurang dari 17 tahun</li>
+                </ul>
+                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`
+                )
+            $("html, body").animate({ scrollTop: 0 });
+        }
     })
 
     $("#permohonan").on('change',function(){

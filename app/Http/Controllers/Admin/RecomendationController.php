@@ -11,6 +11,7 @@ use App\Models\Recomendation;
 use App\Models\Pegawai;
 use App\Models\CatinLaki;
 use App\Models\CatinPerempuan;
+use App\Models\Notification;
 use App\Rules\MinUmur;
 use App\Models\Permohonan;
 
@@ -18,8 +19,13 @@ class RecomendationController extends Controller
 {
     public function index()
     {
+        Notification::where('role',auth()->user()->jabatan)->where('type','Rekomendasi Nikah')->update(['read_at'=>date('Y-m-d H:i:s')]);
         if (request()->ajax()) {
-            $query = Recomendation::with('laki','perempuan')->latest()->get();
+            if(auth()->user()->jabatan=='Masyarakat'){
+                $query = Recomendation::with('laki','perempuan')->where('user_id',auth()->user()->nik)->latest()->get();
+            } else {
+                $query = Recomendation::with('laki','perempuan')->latest()->get();
+            }
             // if(auth()->user()->jabatan=='Masyarakat'){
             //     $query->where('id')
             // }
@@ -27,28 +33,30 @@ class RecomendationController extends Controller
             ->addColumn('action', function ($item) {
                 if(auth()->user()->jabatan=='Petugas' OR auth()->user()->jabatan=='Masyarakat' OR auth()->user()->jabatan=='Penghulu'){
                     $buttons='';
-                    if(auth()->user()->jabatan=='Petugas'){
+                    if(auth()->user()->jabatan=='Masyarakat'){
                         if($item->status==0) {
                             $buttons.='<a class="btn btn-primary btn-xs" href="' . route('recomendation.edit', $item->id) . '">
                             <i class="fas fa-edit"></i> &nbsp; Ubah
                             </a>';
                         }                       
 
-                        $buttons.='
-                        
-                        <form action="' . route('recomendation.destroy', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan menghapus item ini secara permanen dari situs anda?'".')">
-                        ' . method_field('delete') . csrf_field() . '
-                        <button class="btn btn-danger btn-xs">
-                        <i class="far fa-trash-alt"></i> &nbsp; Hapus
-                        </button>
-                        </form>
-                        ';
+                        if($item->status!==1){
+                            $buttons.='
+                            <form action="' . route('recomendation.destroy', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan menghapus item ini secara permanen dari situs anda?'".')">
+                            ' . method_field('delete') . csrf_field() . '
+                            <button class="btn btn-danger btn-xs">
+                            <i class="far fa-trash-alt"></i> &nbsp; Hapus
+                            </button>
+                            </form>
+                            ';
+                        }
                     }
-
-                    if($item->status==1){
-                        $buttons .='<a class="btn btn-secondary btn-xs" target="_blank" href="' . route('recomendation.cetak', $item->id) . '">
-                        <i class="fas fa-download"></i> &nbsp; Donwload
-                        </a>';
+                    if(auth()->user()->jabatan!=='Masyarakat'){
+                        if($item->status==1){
+                            $buttons .='<a class="btn btn-secondary btn-xs" target="_blank" href="' . route('recomendation.cetak', $item->id) . '">
+                            <i class="fas fa-download"></i> &nbsp; Donwload
+                            </a>';
+                        }
                     }
 
                     if($item->status==0){
@@ -57,7 +65,7 @@ class RecomendationController extends Controller
                         </a>';
                     }
 
-                    if(auth()->user()->jabatan=='Penghulu' AND $item->status==0){
+                    if(auth()->user()->jabatan=='Penghulu' AND $item->status==NULL && $item->status !==0){
                         $buttons.='
                         <form action="' . route('recomendation.verification', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan memverifikasi surat ini ?'".')">
                         ' . method_field('post') . csrf_field() . '
@@ -66,6 +74,9 @@ class RecomendationController extends Controller
                         Verifikasi
                         </button>
                         </form>
+                        <button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#tolak'.$item->id.'">
+                        Tolak
+                        </button>
                         ';
                     }
 
@@ -79,7 +90,15 @@ class RecomendationController extends Controller
             ->make();
         }
         
-        return view('pages.admin.recomendation.index');
+
+        if(auth()->user()->jabatan=='Masyarakat'){
+            $item = Recomendation::with('laki','perempuan')->where('user_id',auth()->user()->nik)->latest()->get();
+        } else {
+            $item = Recomendation::with('laki','perempuan')->latest()->get();
+        }
+        return view('pages.admin.recomendation.index',[
+            'item'=>$item
+        ]);
     }
 
     public function create()
@@ -109,14 +128,14 @@ class RecomendationController extends Controller
 
     public function cetak($id)
     {
-       $item = Recomendation::where('id',$id)->with('laki','perempuan','pegawai')->first();
-       return view('pages.admin.recomendation.cetak',[
+     $item = Recomendation::where('id',$id)->with('laki','perempuan','pegawai')->first();
+     return view('pages.admin.recomendation.cetak',[
         'item'=>$item
     ]);
-   }
+ }
 
-   public function show($id)
-   {
+ public function show($id)
+ {
     return 'asdf';
 }
 
@@ -171,11 +190,23 @@ public function store(Request $request)
 
     Recomendation::create([
         'no_surat'=>'SRN/'.date('m').'/'.Recomendation::get()->count().'/'.date('Y'),
+        'user_id'=>auth()->user()->nik,
         'nik_pegawai'=>$validatedData['pegawai'],
         'nik_catin_laki_laki'=>$laki->nik,
         'nik_catin_perempuan'=>$perempuan->nik
     ]);
 
+    Notification::create([
+        'role'=>'Petugas',
+        'user_id'=>null,
+        'type'=>'Rekomendasi Nikah',
+    ]);
+
+    Notification::create([
+        'role'=>'Penghulu',
+        'user_id'=>null,
+        'type'=>'Rekomendasi Nikah',
+    ]);
     return redirect()
     ->route('recomendation.index')
     ->with('success', 'Sukses! 1 Data Berhasil Disimpan');
@@ -247,9 +278,21 @@ public function update(Request $request, $id)
     Recomendation::where('id',$id)->update([
         'nik_pegawai'=>$validatedData['pegawai'],
         'nik_catin_laki_laki'=>$insertLaki['nik'],
-        'nik_catin_perempuan'=>$insertPerempuan['nik']
+        'nik_catin_perempuan'=>$insertPerempuan['nik'],
+        'status'=>null,
+        'alasan_ditolak'=>null
+    ]);
+    Notification::create([
+        'role'=>'Petugas',
+        'user_id'=>null,
+        'type'=>'Rekomendasi Nikah',
     ]);
 
+    Notification::create([
+        'role'=>'Penghulu',
+        'user_id'=>null,
+        'type'=>'Rekomendasi Nikah',
+    ]);
     return redirect()
     ->route('recomendation.index')
     ->with('success', 'Sukses! 1 Data Berhasil Diubah');
@@ -271,13 +314,19 @@ public function destroy($id)
 public function verification($id)
 {
     $item = Recomendation::findorFail($id);
-
-    $item->update(['status'=>request('status')]);
-
     $status='verifikasi';
     if(request('status')==0){
         $status='tolak';
+        $item->update(['status'=>request('status'),'alasan_ditolak'=>request('alasan_penolakan')]);
+    } else {
+        $item->update(['status'=>request('status')]);
     }
+
+    Notification::create([
+        'role'=>'Masyarakat',
+        'user_id'=>$item->user_id,
+        'type'=>'Rekomendasi Nikah',
+    ]);
     return redirect()
     ->route('recomendation.index')
     ->with('success', 'Sukses! 1 Data Berhasil Di'.$status);

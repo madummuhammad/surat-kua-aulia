@@ -36,7 +36,7 @@ Keterangan Nikah Tidak Tercatat
                 <div class="card card-header-actions mb-4">
                     <div class="card-header text-success">
                         List Keterangan Nikah Tidak Tercatat
-                        @if(auth()->user()->jabatan=='Petugas')
+                        @if(auth()->user()->jabatan=='Masyarakat')
                         <a class="btn btn-sm btn-success" href="{{ route('keterangan.create') }}">
                             Tambah Keterangan Nikah Tidak Tercatat
                         </a>
@@ -72,21 +72,48 @@ Keterangan Nikah Tidak Tercatat
                         <table class="table table-striped table-hover table-sm" id="crudTable">
                             <thead>
                                 <tr>
-                                 <th width="10">No.</th>
-                                 <th>Nomor Surat</th>
-                                 <th>Nama</th>
-                                 <th>Status</th>
-                                 <th>Aksi</th>
-                             </tr>
-                         </thead>
-                         <tbody></tbody>
-                     </table>
-                 </div>
-             </div>
-         </div>
-     </div>           
- </div>
+                                   <th width="10">No.</th>
+                                   <th>Nomor Surat</th>
+                                   <th>Nama</th>
+                                   <th>Status</th>
+                                   <th>Alasan Ditolak</th>
+                                   <th>Aksi</th>
+                               </tr>
+                           </thead>
+                           <tbody></tbody>
+                       </table>
+                   </div>
+               </div>
+           </div>
+       </div>           
+   </div>
 </main>
+
+@foreach($item as $item)
+<div class="modal fade" id="tolak{{$item->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="{{route('keterangan.verification',$item->id)}}" method="POST" enctype="multipart/form-data">
+        @method('post')
+        @csrf        
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Tolak Keterangan Nikah</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <input name="status" value="0" hidden>
+            <label for="" class="mb-3">Alasan Penolakan</label>
+            <input type="text" name="alasan_penolakan" class="form-control">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Tolak</button>
+        </div>
+    </div>
+</form>
+</div>
+</div>
+@endforeach
 @endsection
 
 @push('addon-script')
@@ -117,6 +144,7 @@ Keterangan Nikah Tidak Tercatat
             }
         }
     },
+    { data: 'alasan_ditolak', name: 'alasan_ditolak' },
     { 
         data: 'action', 
         name: 'action',

@@ -42,10 +42,11 @@ class LoginController extends Controller
     public function create_user(Request $request)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|max:255',
             'nik' => 'required|unique:users|numeric|digits:16',
-            'password' => 'required|min:5|max:255',
+            'password' => 'required|min:5|max:255|confirmed',
         ]);
+
+        $validatedData['nama']=NULL;
 
         // return request();
         $validatedData['jenis_kelamin']=null;

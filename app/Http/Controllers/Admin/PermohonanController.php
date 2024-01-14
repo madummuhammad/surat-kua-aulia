@@ -7,6 +7,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Permohonan;
+use App\Models\Notification;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ class PermohonanController extends Controller
      */
     public function index()
     {
+        Notification::where('role',auth()->user()->jabatan)->where('type','Permohonan')->update(['read_at'=>date('Y-m-d H:i:s')]);
         if (request()->ajax()) {
             if(auth()->user()->jabatan=='Masyarakat'){
                 $query = Permohonan::where('nik_user',auth()->user()->nik)->latest()->get();
@@ -87,6 +89,12 @@ class PermohonanController extends Controller
         } else {
             $item->update(['status'=>request('status')]);
         }
+
+        Notification::create([
+            'role'=>'Masyarakat',
+            'user_id'=>$item->nik_user,
+            'type'=>'Permohonan',
+        ]);
         return redirect()
         ->route('permohonan.index')
         ->with('success', 'Sukses! 1 Data Berhasil Di'.$status);
@@ -154,7 +162,17 @@ class PermohonanController extends Controller
 
 
         $permohonan=Permohonan::create($validatedData);
+        Notification::create([
+            'role'=>'Penghulu',
+            'user_id'=>null,
+            'type'=>'Permohonan',
+        ]);
 
+        Notification::create([
+            'role'=>'Petugas',
+            'user_id'=>null,
+            'type'=>'Permohonan',
+        ]);
         return redirect()
         ->route('permohonan.index')
         ->with('success', 'Sukses! 1 Data Berhasil Disimpan');
@@ -171,6 +189,12 @@ class PermohonanController extends Controller
             'file'=>$file
         ]);
 
+        $item=Permohonan::findOrFail($id);
+        Notification::create([
+            'role'=>'Masyarakat',
+            'user_id'=>$item->nik_user,
+            'type'=>'Permohonan',
+        ]);
         return back();
     }
 
@@ -185,6 +209,12 @@ class PermohonanController extends Controller
             'file_balasan'=>$file
         ]);
 
+        $item=Permohonan::findOrFail($id);
+        Notification::create([
+            'role'=>'Petugas',
+            'user_id'=>null,
+            'type'=>'Permohonan',
+        ]);
         return back();
     }
 
@@ -211,7 +241,10 @@ class PermohonanController extends Controller
      */
     public function edit($id)
     {
-        //
+        $item=Permohonan::where('id',$id)->first();
+        return view('pages.admin.permohonan.edit',[
+            'item'=>$item
+        ]);
     }
 
     /**
@@ -223,7 +256,35 @@ class PermohonanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'nama' => 'required',
+            'alamat' => 'required',
+            'jenis_kelamin' => 'required',
+        ]);
+        $validatedData['nik_user']=auth()->user()->nik;
+        if($request->file('file_permohonan')){
+            $validatedData['file_permohonan'] = $request->file('file_permohonan')->store('assets/file-permohonan');
+        }
+
+        $validatedData['status']=null;
+        $validatedData['alasan_ditolak']=null;
+
+
+        $permohonan=Permohonan::where('id',$id)->update($validatedData);
+        Notification::create([
+            'role'=>'Penghulu',
+            'user_id'=>null,
+            'type'=>'Permohonan',
+        ]);
+
+        Notification::create([
+            'role'=>'Petugas',
+            'user_id'=>null,
+            'type'=>'Permohonan',
+        ]);
+        return redirect()
+        ->route('permohonan.index')
+        ->with('success', 'Sukses! 1 Data Berhasil Disimpan');
     }
 
     /**

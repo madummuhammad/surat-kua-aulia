@@ -47,6 +47,7 @@ Dashboard
             </div>
         </div>
         <!-- Example Colored Cards for Dashboard Demo-->
+        @if(auth()->user()->jabatan!=='Masyarakat')
         <div class="row">
             <div class="col-lg-12 col-xl-4 mb-4">
                 <div class="card bg-success text-white h-100">
@@ -59,27 +60,10 @@ Dashboard
                             <i class="feather-xl text-white-50" data-feather="mail"></i>
                         </div>
                     </div>
-                    <!-- <div class="card-footer d-flex align-items-center justify-content-between small">
-                        <a class="text-white stretched-link" href="">Selengkapnya</a>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="text-white stretched-link" href="/admin/recomendation">Selengkapnya</a>
                         <div class="text-white"><i class="fas fa-angle-right"></i></div>
-                    </div> -->
-                </div>
-            </div>
-            <div class="col-lg-12 col-xl-4 mb-4">
-                <div class="card bg-warning text-white h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="me-3">
-                                <div class="text-white-75 small">Surat Keluar</div>
-                                <div class="text-lg fw-bold">{{$keluar}}</div>
-                            </div>
-                            <i class="feather-xl text-white-50" data-feather="mail"></i>
-                        </div>
                     </div>
-                   <!--  <div class="card-footer d-flex align-items-center justify-content-between small">
-                        <a class="text-white stretched-link" href="">Selengkapnya</a>
-                        <div class="text-white"><i class="fas fa-angle-right"></i></div>
-                    </div> -->
                 </div>
             </div>
             <div class="col-lg-12 col-xl-4 mb-4">
@@ -93,10 +77,10 @@ Dashboard
                             <i class="feather-xl text-white-50" data-feather="mail"></i>
                         </div>
                     </div>
-                    <!-- <div class="card-footer d-flex align-items-center justify-content-between small">
-                        <a class="text-white stretched-link" href="">Selengkapnya</a>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="text-white stretched-link" href="/admin/pegawai">Selengkapnya</a>
                         <div class="text-white"><i class="fas fa-angle-right"></i></div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <div class="col-lg-12 col-xl-4 mb-4">
@@ -110,16 +94,17 @@ Dashboard
                             <i class="feather-xl text-white-50" data-feather="mail"></i>
                         </div>
                     </div>
-                    <!-- <div class="card-footer d-flex align-items-center justify-content-between small">
-                        <a class="text-white stretched-link" href="">Selengkapnya</a>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="text-white stretched-link" href="/admin/permohonan">Selengkapnya</a>
                         <div class="text-white"><i class="fas fa-angle-right"></i></div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <div class="col-lg-12">
                <canvas id="myChart" width="400" height="200"></canvas>
            </div>
        </div>
+       @endif
    </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -148,12 +133,6 @@ for ($i = 1; $i <= 12; $i++) {
 
     $suratMasukArray[] = $recomendation+$keterangan;
 
-    $undangan = Undangan::whereYear('created_at', now()->year)
-    ->whereMonth('created_at', $i)
-    ->count();
-
-    $suratKeluarArray[] = $undangan;
-
     $pegawai = User::where('jabatan','Petugas')->whereYear('created_at', now()->year)
     ->whereMonth('created_at', $i)
     ->count();
@@ -173,11 +152,7 @@ for ($i = 1; $i <= 12; $i++) {
                 label: 'Surat Masuk',
                 borderColor: 'rgb(75, 192, 192)',
                 data: @php echo json_encode($suratMasukArray) @endphp, 
-            }, {
-                label: 'Surat Keluar',
-                borderColor: 'rgb(255, 99, 132)',
-                data: @php echo json_encode($suratKeluarArray) @endphp,
-            }, {
+            },{
                 label: 'Pegawai',
                 borderColor: 'rgb(255, 205, 86)',
                 data: @php echo json_encode($pegawaiArray) @endphp,

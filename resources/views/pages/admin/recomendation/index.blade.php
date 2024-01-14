@@ -36,7 +36,7 @@ Rekomendasi Nikah
                 <div class="card card-header-actions mb-4">
                     <div class="card-header text-success">
                         List Rekomendasi Nikah
-                        @if(auth()->user()->jabatan=='Petugas')
+                        @if(auth()->user()->jabatan=='Masyarakat')
                         <a class="btn btn-sm btn-success" href="{{ route('recomendation.create') }}">
                             Tambah Rekomendasi Nikah
                         </a>
@@ -76,6 +76,7 @@ Rekomendasi Nikah
                                     <th>Nomor Surat</th>
                                     <th>Nama</th>
                                     <th>Status</th>
+                                    <th>Alasan Ditolak</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -87,6 +88,31 @@ Rekomendasi Nikah
         </div>           
     </div>
 </main>
+@foreach($item as $item)
+<div class="modal fade" id="tolak{{$item->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="{{route('recomendation.verification',$item->id)}}" method="POST" enctype="multipart/form-data">
+        @method('post')
+        @csrf        
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Tolak Surat Rekomendasi</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <input name="status" value="0" hidden>
+            <label for="" class="mb-3">Alasan Penolakan</label>
+            <input type="text" name="alasan_penolakan" class="form-control">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Tolak</button>
+        </div>
+    </div>
+</form>
+</div>
+</div>
+@endforeach
 @endsection
 
 @push('addon-script')
@@ -112,11 +138,14 @@ Rekomendasi Nikah
         render: function (data, type, full, meta) {
             if (data === 1) {
                 return 'Diterima';
-            } else {
+            } else if(data==null) {
                 return 'Belum Diverifikasi';
+            } else {
+                return 'Ditolak';
             }
         }
     },
+    { data: 'alasan_ditolak', name: 'alasan_ditolak' },
     { 
         data: 'action', 
         name: 'action',

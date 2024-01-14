@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Keterangan;
+use App\Models\Notification;
 use App\Models\Pegawai;
 use App\Models\Suami;
 use App\Models\Permohonan;
@@ -17,36 +18,44 @@ class KeteranganController extends Controller
 {
     public function index()
     {
+        Notification::where('role',auth()->user()->jabatan)->where('type','Keterangan')->update(['read_at'=>date('Y-m-d H:i:s')]);
         if (request()->ajax()) {
-            $query = Keterangan::with('laki')->latest()->get();
+            if(auth()->user()->jabatan=='Masyarakat'){
+                $query = Keterangan::with('laki')->latest()->where('user_id',auth()->user()->nik)->get();
+            } else {
+                $query = Keterangan::with('laki')->latest()->get();
+            }
 
             return Datatables::of($query)
             ->addColumn('action', function ($item) {
 
                 if(auth()->user()->jabatan=='Petugas' OR auth()->user()->jabatan=='Masyarakat' OR auth()->user()->jabatan=='Penghulu'){
                     $buttons='';
-                    if(auth()->user()->jabatan=='Petugas'){
+                    if(auth()->user()->jabatan=='Masyarakat'){
                         if($item->status==0) {
                             $buttons.='<a class="btn btn-primary btn-xs" href="' . route('keterangan.edit', $item->id) . '">
                             <i class="fas fa-edit"></i> &nbsp; Ubah
                             </a>';
                         }                       
+                        if($item->status!==1){
+                            $buttons.='
 
-                        $buttons.='
-                        
-                        <form action="' . route('keterangan.destroy', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan menghapus item ini secara permanen dari situs anda?'".')">
-                        ' . method_field('delete') . csrf_field() . '
-                        <button class="btn btn-danger btn-xs">
-                        <i class="far fa-trash-alt"></i> &nbsp; Hapus
-                        </button>
-                        </form>
-                        ';
+                            <form action="' . route('keterangan.destroy', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan menghapus item ini secara permanen dari situs anda?'".')">
+                            ' . method_field('delete') . csrf_field() . '
+                            <button class="btn btn-danger btn-xs">
+                            <i class="far fa-trash-alt"></i> &nbsp; Hapus
+                            </button>
+                            </form>
+                            ';
+                        }
                     }
 
-                    if($item->status==1){
-                        $buttons .='<a class="btn btn-secondary btn-xs" target="_blank" href="' . route('keterangan.cetak', $item->id) . '">
-                        <i class="fas fa-download"></i> &nbsp; Donwload
-                        </a>';
+                    if(auth()->user()->jabatan!=='Masyarakat'){
+                        if($item->status==1){
+                            $buttons .='<a class="btn btn-secondary btn-xs" target="_blank" href="' . route('keterangan.cetak', $item->id) . '">
+                            <i class="fas fa-download"></i> &nbsp; Download
+                            </a>';
+                        }
                     }
 
                     if($item->status==0 AND auth()->user()->jabatan=='Penghulu'){
@@ -55,7 +64,7 @@ class KeteranganController extends Controller
                         </a>';
                     }
 
-                    if(auth()->user()->jabatan=='Penghulu' AND $item->status==0){
+                    if(auth()->user()->jabatan=='Penghulu' AND $item->status==NULL && $item->status !==0){
                         $buttons.='
                         <form action="' . route('keterangan.verification', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan memverifikasi surat ini ?'".')">
                         ' . method_field('post') . csrf_field() . '
@@ -64,6 +73,9 @@ class KeteranganController extends Controller
                         Verifikasi
                         </button>
                         </form>
+                        <button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#tolak'.$item->id.'">
+                        Tolak
+                        </button>
                         ';
                     }
                     return $buttons;
@@ -75,7 +87,15 @@ class KeteranganController extends Controller
             ->rawColumns(['action','name'])
             ->make();
         }
-        return view('pages.admin.keterangan.index');
+
+        if(auth()->user()->jabatan=='Masyarakat'){
+            $item = Keterangan::with('laki')->latest()->where('user_id',auth()->user()->nik)->get();
+        } else {
+            $item = Keterangan::with('laki')->latest()->get();
+        }
+        return view('pages.admin.keterangan.index',[
+            'item'=>$item
+        ]);
     }
 
     public function create()
@@ -157,10 +177,23 @@ class KeteranganController extends Controller
         Keterangan::create([
             'no_surat'=>'SKNTC/'.date('m').'/'.Keterangan::get()->count().'/'.date('Y'),
             'nik_pegawai'=>$validatedData['pegawai'],
+            'user_id'=>auth()->user()->nik,
             'nik_suami'=>$laki->nik,
-            'nik_istri'=>$perempuan->nik
+            'nik_istri'=>$perempuan->nik,
+            'status'=>null,
+            'alasan_ditolak'=>null
+        ]);
+        Notification::create([
+            'role'=>'Petugas',
+            'user_id'=>null,
+            'type'=>'Keterangan',
         ]);
 
+        Notification::create([
+            'role'=>'Penghulu',
+            'user_id'=>null,
+            'type'=>'Keterangan',
+        ]);
         return redirect()
         ->route('keterangan.index')
         ->with('success', 'Sukses! 1 Data Berhasil Disimpan');
@@ -231,9 +264,21 @@ class KeteranganController extends Controller
         Keterangan::where('id',$id)->update([
             'nik_pegawai'=>$validatedData['pegawai'],
             'nik_suami'=>$insertLaki['nik'],
-            'nik_istri'=>$insertPerempuan['nik']
+            'nik_istri'=>$insertPerempuan['nik'],
+            'status'=>null,
+            'alasan_ditolak'=>null
+        ]);
+        Notification::create([
+            'role'=>'Petugas',
+            'user_id'=>null,
+            'type'=>'Keterangan',
         ]);
 
+        Notification::create([
+            'role'=>'Penghulu',
+            'user_id'=>null,
+            'type'=>'Keterangan',
+        ]);
         return redirect()
         ->route('keterangan.index')
         ->with('success', 'Sukses! 1 Data Berhasil Diubah');
@@ -255,13 +300,19 @@ class KeteranganController extends Controller
     public function verification($id)
     {
         $item = Keterangan::findorFail($id);
-
-        $item->update(['status'=>request('status')]);
-
         $status='verifikasi';
         if(request('status')==0){
             $status='tolak';
+            $item->update(['status'=>request('status'),'alasan_ditolak'=>request('alasan_penolakan')]);
+        } else {
+            $item->update(['status'=>request('status')]);
         }
+
+        Notification::create([
+            'role'=>'Masyarakat',
+            'user_id'=>$item->user_id,
+            'type'=>'Keterangan',
+        ]);
         return redirect()
         ->route('keterangan.index')
         ->with('success', 'Sukses! 1 Data Berhasil Di'.$status);

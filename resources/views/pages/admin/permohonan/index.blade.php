@@ -36,7 +36,7 @@ Permohonan
                 <div class="card card-header-actions mb-4">
                     <div class="card-header text-success">
                         List Permohonan
-                        @if(auth()->user()->jabatan!=='Kepala KUA')
+                        @if(auth()->user()->jabatan=='Masyarakat')
                         <a class="btn btn-sm btn-success" href="{{ route('permohonan.create') }}">
                             Tambah Permohonan
                         </a>

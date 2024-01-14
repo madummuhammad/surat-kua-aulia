@@ -61,16 +61,7 @@
                             @csrf
                             <!-- Form Group (email address)-->
                             <div class="mb-3">
-                                <label class="small mb-1" for="nama">Nama</label>
-                                <input class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" type="text" value="{{ old('nama') }}" placeholder="Enter your name" autofocus required/>
-                                @error('nama')
-                                <div class="invalid-feedback">
-                                    {{ $message; }}
-                                </div>
-                                @enderror
-                            </div>
-                             <div class="mb-3">
-                                <label class="small mb-1" for="nik">NIK</label>
+                                <label class="small mb-1" for="nik">Username</label>
                                 <input class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" type="text" value="{{ old('nik') }}" placeholder="Enter nik" autofocus required/>
                                 @error('nik')
                                 <div class="invalid-feedback">
@@ -81,7 +72,21 @@
                             <!-- Form Group (password)-->
                             <div class="mb-3">
                                 <label class="small mb-1" for="password">Password</label>
-                                <input class="form-control" id="password" name="password" type="password" placeholder="Enter password" required/>
+                                <input class="form-control @error('password') is-invalid @enderror" id="password" name="password" type="password" placeholder="Masukan password" required/>
+                                @error('password')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="small mb-1" for="password_confirmation">Ulangi Password</label>
+                                <input class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" name="password_confirmation" type="password_confirmation" placeholder="Ulangi password" required/>
+                                @error('password_confirmation')
+                                <div class="invalid-feedback">
+                                    {{ $message; }}
+                                </div>
+                                @enderror
                             </div>
                             <!-- Form Group (remember password checkbox)-->
 <!--                             <div class="mb-3">

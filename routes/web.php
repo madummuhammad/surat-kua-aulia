@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\RecomendationController;
 use App\Http\Controllers\Admin\KeteranganController;
 use App\Http\Controllers\Admin\PemberitahuanController;
 use App\Http\Controllers\Admin\NikahController;
-use App\Http\Controllers\Admin\UndanganController;
 use App\Http\Controllers\Admin\PermohonanController;
 use App\Http\Controllers\Admin\DisposisiController;
 use App\Http\Controllers\Admin\PegawaiController;
@@ -89,13 +88,6 @@ Route::prefix('admin')
     Route::get('nikah/print/create',[NikahController::class,'print'])->name('nikah.print');
     Route::post('nikah/print/cetak',[NikahController::class,'cetak'])->name('nikah.cetak');
     Route::get('nikah/print/cetak_laporan',[NikahController::class,'cetak_laporan'])->name('nikah.cetak-laporan');
-
-    Route::resource('/undangan', UndanganController::class);
-    Route::post('/undangan/verification/{id}', [UndanganController::class,'verification'])->name('undangan.verification');
-    Route::get('undangan/download/{id}', [UndanganController::class, 'download_undangan'])->name('download-undangan');
-    Route::get('undangan/print/create',[UndanganController::class,'print'])->name('undangan.print');
-    Route::get('undangan/print/cetak/{id}',[UndanganController::class,'cetak'])->name('undangan.cetak');
-    Route::get('undangan/print/cetak_laporan',[UndanganController::class,'cetak_laporan'])->name('undangan.cetak-laporan');
 
     Route::resource('/disposisi', DisposisiController::class);
     Route::post('/disposisi/verification/{id}', [DisposisiController::class,'verification'])->name('disposisi.verification');

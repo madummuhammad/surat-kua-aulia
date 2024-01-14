@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pegawai;
+use App\Models\Notification;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,9 @@ class PegawaiController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->jabatan!=='Petugas'){
+            return redirect('admin/dashboard');
+        }
         if (request()->ajax()) {
             $query = Pegawai::latest()->get();
 
@@ -87,7 +91,6 @@ class PegawaiController extends Controller
         }
 
         Pegawai::create($validatedData);
-
         return redirect()
         ->route('pegawai.index')
         ->with('success', 'Sukses! Data Pengguna Berhasil Disimpan');
@@ -131,14 +134,14 @@ class PegawaiController extends Controller
         $validatedData = $request->validate([
             'nik' => [
                 'required'
-           
-        ],
-        'nama' => 'required',
-        'alamat' => 'required',
-        'jabatan' => 'required',
-        'jenis_kelamin' => 'required',
-        'agama' => 'required',
-    ]);
+
+            ],
+            'nama' => 'required',
+            'alamat' => 'required',
+            'jabatan' => 'required',
+            'jenis_kelamin' => 'required',
+            'agama' => 'required',
+        ]);
 
         if($request->file('foto')){
             $validatedData['foto'] = $request->file('foto')->store('assets/foto');

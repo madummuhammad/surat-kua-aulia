@@ -1,3 +1,24 @@
+@php
+use App\Models\Notification;
+if(auth()->user()->jabatan!=='Masyarakat'){
+    $permohonan=Notification::where('read_at',NULL)->where('role',auth()->user()->jabatan)->where('type','Permohonan')->exists();
+} else {
+    $permohonan=Notification::where('read_at',NULL)->where('role',auth()->user()->jabatan)->where('type','Permohonan')->where('user_id',auth()->user()->nik)->exists();
+}
+
+if(auth()->user()->jabatan!=='Masyarakat'){
+   $rekomendasi=Notification::where('read_at',NULL)->where('role',auth()->user()->jabatan)->where('type','Rekomendasi Nikah')->exists();
+} else {
+   $rekomendasi=Notification::where('read_at',NULL)->where('role',auth()->user()->jabatan)->where('type','Rekomendasi Nikah')->where('user_id',auth()->user()->nik)->exists();
+}
+
+if(auth()->user()->jabatan!=='Masyarakat'){
+    $keterangan=Notification::where('read_at',NULL)->where('role',auth()->user()->jabatan)->where('type','Keterangan')->exists();
+} else {
+    $keterangan=Notification::where('read_at',NULL)->where('role',auth()->user()->jabatan)->where('type','Keterangan')->where('user_id',auth()->user()->nik)->exists();
+}
+@endphp
+
 <nav class="sidenav shadow-right sidenav-light">
     <div class="sidenav-menu">
         <div class="nav accordion" id="accordionSidenav">
@@ -37,34 +58,39 @@
             <a class="nav-link {{ (request()->is('admin/permohonan*')) ? 'active' : '' }}" href="{{ route('permohonan.index') }}">
                 <div class="nav-link-icon"><i data-feather="permohonan"></i></div>
                 Data Permohonan
+                @if($permohonan)
+                <span class="badge bg-success-soft text-success ms-auto">New!</span>
+                @endif
             </a>
             @endif
-            @if(auth()->user()->jabatan=='Petugas'  OR auth()->user()->jabatan=='Penghulu' OR auth()->user()->jabatan=='Kepala KUA')
+            @if(auth()->user()->jabatan=='Petugas'  OR auth()->user()->jabatan=='Penghulu' OR auth()->user()->jabatan=='Kepala KUA' OR auth()->user()->jabatan=='Masyarakat')
             <div class="dropdown-divider"></div>
             <div class="nav-link">Surat Masuk</div>
             <a class="nav-link {{ (request()->is('admin/recomendation*')) ? 'active' : '' }}" href="{{ route('recomendation.index') }}">
                 <div class="nav-link-icon"><i data-feather="recomendation"></i></div>
                 Rekomendasi Nikah
+                @if($rekomendasi)
+                <span class="badge bg-success-soft text-success ms-auto">New!</span>
+                @endif
             </a>
             <a class="nav-link {{ (request()->is('admin/keterangan*')) ? 'active' : '' }}" href="{{ route('keterangan.index') }}">
                 <div class="nav-link-icon"><i data-feather="keterangan"></i></div>
                 Keterangan Nikah Tidak Tercatat
+                @if($keterangan)
+                <span class="badge bg-success-soft text-success ms-auto">New!</span>
+                @endif
             </a>
             <!-- <a class="nav-link {{ (request()->is('admin/pemberitahuan*')) ? 'active' : '' }}" href="{{ route('pemberitahuan.index') }}">
                 <div class="nav-link-icon"><i data-feather="pemberitahuan"></i></div>
                 Pemberitahuan Kekurangan Syarat Pernikahan
             </a> -->
             @if(auth()->user()->jabatan!=='Masyarakat')
-            <div class="dropdown-divider"></div>
-            <div class="nav-link">Surat Keluar</div>
+            <!-- <div class="dropdown-divider"></div> -->
+            <!-- <div class="nav-link">Surat Keluar</div> -->
           <!--   <a class="nav-link {{ (request()->is('admin/nikah*')) ? 'active' : '' }}" href="{{ route('nikah.index') }}">
                 <div class="nav-link-icon"><i data-feather="nikah"></i></div>
                 Permintaan Buku Nikah & Akta Nikah
             </a> -->
-            <a class="nav-link {{ (request()->is('admin/undangan*')) ? 'active' : '' }}" href="{{ route('undangan.index') }}">
-                <div class="nav-link-icon"><i data-feather="undangan"></i></div>
-                Undangan
-            </a>
            <!--  <a class="nav-link {{ (request()->is('admin/disposisi*')) ? 'active' : '' }}" href="{{ route('disposisi.index') }}">
                 <div class="nav-link-icon"><i data-feather="disposisi"></i></div>
                 Disposisi
