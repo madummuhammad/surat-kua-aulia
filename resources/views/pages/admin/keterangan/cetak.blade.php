@@ -151,6 +151,7 @@
 		<p>Demikian surat keterangan ini kami buat untuk digunakan Mengikuti Sidang Itsbat Nikah di Pengadilan Agama Kota Yogyakarta</p>
 	</div>
 	<div style="margin-right: 50px;margin-top: 20px;" class="d-flex justify-content-end">
+		@if($item->pegawai)
 		<div class="text-center">
 			@if($item->pegawai->jabatan=='Kepala KUA')
 			<p>Dikeluarkan di : Gondokusuman</p>
@@ -168,6 +169,7 @@
 			<P>&emsp;</P>
 			<P>{{$item->pegawai->nama}}</P>
 		</div>
+		@endif
 	</div>
 </body>
 <script>

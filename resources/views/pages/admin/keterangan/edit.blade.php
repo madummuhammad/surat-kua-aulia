@@ -39,9 +39,6 @@ Ubah Surat
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Calon Perempuan</button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Pegawai</button>
-        </li>
     </ul>
     <form action="{{ route('keterangan.update',$item->id) }}" method="post" enctype="multipart/form-data">
         @csrf
@@ -219,42 +216,13 @@ Ubah Surat
                             @enderror
                         </div>
                         <div class="mb-3 d-flex justify-content-end">
-                         <button class="btn btn-success" id="perempuan_next" type="button">Lanjut</button>
+                         <button class="btn btn-success" id="perempuan_next" type="submit">Kirim</button>
                      </div>
                  </div>
              </div>
          </div>
      </div>
  </div>
-</div>
-<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
- <div class="row gx-4">
-    <div class="col-lg-9">
-        <div class="card mb-4">
-            <div class="card-header text-success">Form Pegawai</div>
-            <div class="card-body">
-                <div class="mb-3 row">
-                    <label for="pegawai" class="col-sm-3 col-form-label">Jabatan</label>
-                    <div class="col-sm-9">
-                        <select name="pegawai" class="form-control selectx" >
-                            @foreach($pegawai as $pegawai)
-                            <option value="{{$pegawai->nik}}" @if($pegawai->nik==$item->pegawai) 'selected' @endif>{{$pegawai->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @error('pegawai')
-                    <div class="invalid-feedback">
-                        {{ $message; }}
-                    </div>
-                    @enderror
-                </div>
-                <div class="mb-3 d-flex justify-content-end">
-                 <button class="btn btn-success" type="submit">Kirim</button>
-             </div>
-         </div>
-     </div>
- </div>
-</div>
 </div>
 </div>
 </form>
@@ -306,15 +274,15 @@ Ubah Surat
     })
 
     $("#perempuan_next").on('click',function(){
-        $("#contact").addClass('active')
-        $("#contact").addClass('show')
-        $("#profile").removeClass('show')
-        $("#profile").removeClass('active')
+        // $("#contact").addClass('active')
+        // $("#contact").addClass('show')
+        // $("#profile").removeClass('show')
+        // $("#profile").removeClass('active')
 
-        $("[data-bs-target='#contact']").addClass('active');
-        $("[data-bs-target='#contact']").addClass('show');
-        $("[data-bs-target='#profile']").removeClass('active');
-        $("[data-bs-target='#profile']").removeClass('show');
+        // $("[data-bs-target='#contact']").addClass('active');
+        // $("[data-bs-target='#contact']").addClass('show');
+        // $("[data-bs-target='#profile']").removeClass('active');
+        // $("[data-bs-target='#profile']").removeClass('show');
     })
 </script>
 @endpush

@@ -176,6 +176,7 @@
 		<p>&emsp;&emsp;Berdasarkan persyaratan yang telah ditentukan dalam PMA Nomor 20 Tahun 2019 kami lampirkan persyaratan permohonan pendaftaran kehendak pernikahan</p>
 	</div>
 	<div style="margin-right: 50px;margin-top: 20px;" class="d-flex justify-content-end">
+		@if($item->pegawai)
 		<div class="text-center">
 			@if($item->pegawai->jabatan=='Kepala KUA')
 			<p>Kepala KUA Kecamatan</p>
@@ -189,6 +190,7 @@
 			<P>&emsp;</P>
 			<P>{{$item->pegawai->nama}}</P>
 		</div>
+		@endif
 	</div>
 </body>
 <script>

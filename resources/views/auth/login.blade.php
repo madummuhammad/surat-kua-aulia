@@ -61,8 +61,8 @@
                             @csrf
                             <!-- Form Group (email address)-->
                             <div class="mb-3">
-                                <label class="small mb-1" for="username">NIK</label>
-                                <input class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" type="text" value="{{ old('nik') }}" placeholder="Enter nik" autofocus required/>
+                                <label class="small mb-1" for="username">Username</label>
+                                <input class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" type="text" value="{{ old('nik') }}" placeholder="Enter username" autofocus required/>
                                 @error('nik')
                                 <div class="invalid-feedback">
                                     {{ $message; }}

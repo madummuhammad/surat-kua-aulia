@@ -62,6 +62,7 @@ Route::prefix('admin')
 
     Route::resource('/recomendation', RecomendationController::class);
     Route::post('/recomendation/verification/{id}', [RecomendationController::class,'verification'])->name('recomendation.verification');
+    Route::post('/recomendation/pegawai/{id}', [RecomendationController::class,'pegawai'])->name('recomendation.pegawai');
     Route::get('recomendation/download/{id}', [RecomendationController::class, 'download_recomendation'])->name('download-recomendation');
     Route::get('recomendation/print/create',[RecomendationController::class,'print'])->name('recomendation.print');
     Route::get('recomendation/print/cetak/{id}',[RecomendationController::class,'cetak'])->name('recomendation.cetak');
@@ -69,6 +70,7 @@ Route::prefix('admin')
 
     Route::resource('/keterangan', KeteranganController::class);
     Route::post('/keterangan/verification/{id}', [KeteranganController::class,'verification'])->name('keterangan.verification');
+    Route::post('/keterangan/pegawai/{id}', [KeteranganController::class,'pegawai'])->name('keterangan.pegawai');
     Route::get('keterangan/download/{id}', [KeteranganController::class, 'download_keterangan'])->name('download-keterangan');
     Route::get('keterangan/print/create',[KeteranganController::class,'print'])->name('keterangan.print');
     Route::get('keterangan/print/cetak/{id}',[KeteranganController::class,'cetak'])->name('keterangan.cetak');

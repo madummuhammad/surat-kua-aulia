@@ -43,11 +43,8 @@ Tambah Surat
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Calon Perempuan</button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Pegawai</button>
-        </li>
     </ul>
-    <form action="{{ route('recomendation.store') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('recomendation.store') }}" id="recomendation_form" method="post" enctype="multipart/form-data">
         @csrf
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -199,16 +196,16 @@ Tambah Surat
                                     @enderror
                                 </div>
                                 <div class="mb-3 d-flex justify-content-end">
-                                   <button class="btn btn-success" id="laki_next" type="button">Lanjut</button>
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                 <button class="btn btn-success" id="laki_next" type="button">Lanjut</button>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-             <div class="row gx-4">
+               <div class="row gx-4">
                 <div class="col-lg-9">
                     <div class="card mb-4">
                         <div class="card-header text-success">Form Perempuan</div>
@@ -347,43 +344,14 @@ Tambah Surat
                             </div>
 
                             <div class="mb-3 d-flex justify-content-end">
-                               <button class="btn btn-success" id="perempuan_next" type="button">Lanjut</button>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </div>
-   <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-       <div class="row gx-4">
-        <div class="col-lg-9">
-            <div class="card mb-4">
-                <div class="card-header text-success">Form Pegawai</div>
-                <div class="card-body">
-                    <div class="mb-3 row">
-                        <label for="pegawai" class="col-sm-3 col-form-label">Jabatan</label>
-                        <div class="col-sm-9">
-                            <select name="pegawai" class="form-control selectx" >
-                                @foreach($pegawai as $pegawai)
-                                <option value="{{$pegawai->nik}}">{{$pegawai->jabatan}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('pegawai')
-                        <div class="invalid-feedback">
-                            {{ $message; }}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="mb-3 d-flex justify-content-end">
-                       <button class="btn btn-success" type="submit">Kirim</button>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </div>
-</div>
+                             <button class="btn btn-success" id="perempuan_next" type="button">Kirim</button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
 </div>
 </form>
 
@@ -432,26 +400,49 @@ Tambah Surat
             age--;
         }
 
+        var nik_laki_laki = $("input[name='nik_laki_laki']").val();
+
+    // Validate nik_laki_laki
+    if (/^\d{16}$/.test(nik_laki_laki)) {
         if (age >= 17) {
             $("#profile").addClass('active show');
             $("#home").removeClass('show active');
             $("[data-bs-target='#profile']").addClass('active show');
             $("[data-bs-target='#home']").removeClass('active show');
             $("input[name='tgl_lahir_laki_laki']").removeClass('is-invalid');
-            $("#error-tgl-laki").html(' ')
-        } else {
-            $("input[name='tgl_lahir_laki_laki']").addClass('is-invalid');
-            $("#error-tgl-laki").html(
-                ` <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <ul>
-                <li>Tanggal lahir laki-laki kurang dari 17 tahun</li>
-                </ul>
-                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>`
-                )
-            $("html, body").animate({ scrollTop: 0 });
+            $("#error-tgl-laki").html(' ');
+
+            return;
         }
-    });
+
+        $("input[name='tgl_lahir_laki_laki']").addClass('is-invalid');
+        $("input[name='nik_laki_laki']").removeClass('is-invalid');
+        $("#error-tgl-laki").html(
+            `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+            <li>Tanggal lahir laki-laki kurang dari 17 tahun</li>
+            </ul>
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`
+            );
+        $("html, body").animate({ scrollTop: 0 });
+    } else {
+        // Display error for invalid nik_laki_laki
+        // You can customize this part based on your requirements
+        $("input[name='nik_laki_laki']").addClass('is-invalid');
+        $("#error-tgl-laki").html(
+            `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+            <li>Nomor Induk Kependudukan harus terdiri dari 16 digit angka</li>
+            </ul>
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`
+            );
+
+        $("html, body").animate({ scrollTop: 0 });
+    }
+});
+
 
 
     $("#perempuan_next").on('click',function(){
@@ -464,34 +455,52 @@ Tambah Surat
         if (currentDate.getMonth() < dob.getMonth() || (currentDate.getMonth() === dob.getMonth() && currentDate.getDate() < dob.getDate())) {
             age--;
         }
+        var nik_perempuan = $("input[name='nik_perempuan']").val();
 
+    // Validate nik_perempuan
+    if (/^\d{16}$/.test(nik_perempuan)) {
         if (age >= 17) {
 
-            $("#contact").addClass('active')
-            $("#contact").addClass('show')
-            $("#profile").removeClass('show')
-            $("#profile").removeClass('active')
+            // $("#contact").addClass('active')
+            // $("#contact").addClass('show')
+            // $("#profile").removeClass('show')
+            // $("#profile").removeClass('active')
 
-            $("[data-bs-target='#contact']").addClass('active');
-            $("[data-bs-target='#contact']").addClass('show');
-            $("[data-bs-target='#profile']").removeClass('active');
-            $("[data-bs-target='#profile']").removeClass('show');
+            // $("[data-bs-target='#contact']").addClass('active');
+            // $("[data-bs-target='#contact']").addClass('show');
+            // $("[data-bs-target='#profile']").removeClass('active');
+            // $("[data-bs-target='#profile']").removeClass('show');
 
             $("input[name='tgl_lahir_perempuan']").removeClass('is-invalid');
             $("#error-tgl-laki").html(' ')
-        } else {
-            $("input[name='tgl_lahir_perempuan']").addClass('is-invalid');
-            $("#error-tgl-laki").html(
-                ` <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <ul>
-                <li>Tanggal lahir perempuan kurang dari 17 tahun</li>
-                </ul>
-                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>`
-                )
-            $("html, body").animate({ scrollTop: 0 });
+            $("#recomendation_form").submit();
+            return;
         }
-    })
+        $("input[name='tgl_lahir_perempuan']").addClass('is-invalid');
+        $("input[name='nik_perempuan']").removeClass('is-invalid');
+        $("#error-tgl-laki").html(
+            ` <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+            <li>Tanggal lahir perempuan kurang dari 17 tahun</li>
+            </ul>
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`
+            )
+        $("html, body").animate({ scrollTop: 0 });
+    } else {
+        $("input[name='nik_perempuan']").addClass('is-invalid');
+        $("#error-tgl-laki").html(
+            `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+            <li>Nomor Induk Kependudukan harus terdiri dari 16 digit angka</li>
+            </ul>
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`
+            );
+
+        $("html, body").animate({ scrollTop: 0 });
+    }
+})
 
     $("#permohonan").on('change',function(){
         const value=JSON.parse($(this).val());

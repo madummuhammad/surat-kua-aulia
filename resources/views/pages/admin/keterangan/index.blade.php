@@ -113,6 +113,42 @@ Keterangan Nikah Tidak Tercatat
 </form>
 </div>
 </div>
+
+<div class="modal fade" id="pegawai{{$item->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="{{route('keterangan.pegawai',$item->id)}}" method="POST" enctype="multipart/form-data">
+        @method('post')
+        @csrf        
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Pegawai</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+           <div class="mb-3 row">
+            <label for="pegawai" class="col-sm-3 col-form-label">Jabatan</label>
+            <div class="col-sm-9">
+                <select name="pegawai" class="form-control selectx" >
+                    @foreach($pegawai as $pegawai)
+                    <option value="{{$pegawai->nik}}">{{$pegawai->jabatan}}</option>
+                    @endforeach
+                </select>
+            </div>
+            @error('pegawai')
+            <div class="invalid-feedback">
+                {{ $message; }}
+            </div>
+            @enderror
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Kirim</button>
+    </div>
+</div>
+</form>
+</div>
+</div>
 @endforeach
 @endsection
 

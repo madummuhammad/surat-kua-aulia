@@ -53,37 +53,43 @@ class RecomendationController extends Controller
                     }
                     if(auth()->user()->jabatan!=='Masyarakat'){
                         if($item->status==1){
-                            $buttons .='<a class="btn btn-secondary btn-xs" target="_blank" href="' . route('recomendation.cetak', $item->id) . '">
-                            <i class="fas fa-download"></i> &nbsp; Donwload
-                            </a>';
-                        }
-                    }
+                            if($item->pegawai){
+                                $buttons .='<a class="btn btn-secondary btn-xs" target="_blank" href="' . route('recomendation.cetak', $item->id) . '">
+                                <i class="fas fa-download"></i> &nbsp; Donwload
+                                </a>';
+                            } else {
+                               $buttons .='<a class="btn btn-secondary btn-xs" data-bs-toggle="modal" data-bs-target="#pegawai'.$item->id.'">
+                               <i class="fas fa-upload"></i> &nbsp; Input Pegawai
+                               </a>';
+                           }
+                       }
+                   }
 
-                    if($item->status==0){
-                        $buttons .='<a class="btn btn-secondary btn-xs" href="' . route('recomendation.cetak', $item->id) . '">
-                        <i class="fas fa-eye"></i> &nbsp; Lihat
-                        </a>';
-                    }
-
-                    if(auth()->user()->jabatan=='Penghulu' AND $item->status==NULL && $item->status !==0){
-                        $buttons.='
-                        <form action="' . route('recomendation.verification', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan memverifikasi surat ini ?'".')">
-                        ' . method_field('post') . csrf_field() . '
-                        <input name="status" value="1" hidden>
-                        <button class="btn btn-primary btn-xs">
-                        Verifikasi
-                        </button>
-                        </form>
-                        <button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#tolak'.$item->id.'">
-                        Tolak
-                        </button>
-                        ';
-                    }
-
-
-                    return $buttons;
+                   if($item->status==0){
+                    $buttons .='<a class="btn btn-secondary btn-xs" href="' . route('recomendation.cetak', $item->id) . '">
+                    <i class="fas fa-eye"></i> &nbsp; Lihat
+                    </a>';
                 }
-            })
+
+                if(auth()->user()->jabatan=='Petugas' AND $item->status==NULL && $item->status !==0){
+                    $buttons.='
+                    <form action="' . route('recomendation.verification', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan memverifikasi surat ini ?'".')">
+                    ' . method_field('post') . csrf_field() . '
+                    <input name="status" value="1" hidden>
+                    <button class="btn btn-primary btn-xs">
+                    Verifikasi
+                    </button>
+                    </form>
+                    <button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#tolak'.$item->id.'">
+                    Tolak
+                    </button>
+                    ';
+                }
+
+
+                return $buttons;
+            }
+        })
             ->addIndexColumn()
             ->removeColumn('id')
             ->rawColumns(['action','name'])
@@ -96,9 +102,20 @@ class RecomendationController extends Controller
         } else {
             $item = Recomendation::with('laki','perempuan')->latest()->get();
         }
+        $pegawai=Pegawai::get();
         return view('pages.admin.recomendation.index',[
-            'item'=>$item
+            'item'=>$item,
+            'pegawai'=>$pegawai
         ]);
+    }
+
+    public function pegawai(Request $request,$id)
+    {
+        Recomendation::where('id',$id)->update(['nik_pegawai'=>$request->pegawai]);
+        return redirect()
+        ->route('recomendation.index')
+        ->with('success', 'Sukses! 1 Data Berhasil Disimpan');
+
     }
 
     public function create()
@@ -128,14 +145,14 @@ class RecomendationController extends Controller
 
     public function cetak($id)
     {
-     $item = Recomendation::where('id',$id)->with('laki','perempuan','pegawai')->first();
-     return view('pages.admin.recomendation.cetak',[
+       $item = Recomendation::where('id',$id)->with('laki','perempuan','pegawai')->first();
+       return view('pages.admin.recomendation.cetak',[
         'item'=>$item
     ]);
- }
+   }
 
- public function show($id)
- {
+   public function show($id)
+   {
     return 'asdf';
 }
 
@@ -171,7 +188,7 @@ public function store(Request $request)
         "tempat_lahir_perempuan"=> "required",
         "tgl_lahir_perempuan" => ["required", new MinUmur(17)],
         "agama_perempuan"=> "required",
-        "pegawai"=> "required"
+        // "pegawai"=> "required"
     ]);
 
     $dataLakiLaki = array_filter($validatedData, function($key) {
@@ -191,7 +208,7 @@ public function store(Request $request)
     Recomendation::create([
         'no_surat'=>'SRN/'.date('m').'/'.Recomendation::get()->count().'/'.date('Y'),
         'user_id'=>auth()->user()->nik,
-        'nik_pegawai'=>$validatedData['pegawai'],
+        'nik_pegawai'=>null,
         'nik_catin_laki_laki'=>$laki->nik,
         'nik_catin_perempuan'=>$perempuan->nik
     ]);
@@ -258,7 +275,7 @@ public function update(Request $request, $id)
         "tempat_lahir_perempuan"=> "required",
         "tgl_lahir_perempuan"=> "required",
         "agama_perempuan"=> "required",
-        "pegawai"=> "required"
+        // "pegawai"=> "required"
     ]);
 
     $dataLakiLaki = array_filter($validatedData, function($key) {
@@ -276,7 +293,6 @@ public function update(Request $request, $id)
     $perempuan=CatinPerempuan::where('nik',$insertPerempuan['nik'])->update($insertPerempuan);
 
     Recomendation::where('id',$id)->update([
-        'nik_pegawai'=>$validatedData['pegawai'],
         'nik_catin_laki_laki'=>$insertLaki['nik'],
         'nik_catin_perempuan'=>$insertPerempuan['nik'],
         'status'=>null,

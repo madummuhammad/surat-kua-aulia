@@ -52,35 +52,41 @@ class KeteranganController extends Controller
 
                     if(auth()->user()->jabatan!=='Masyarakat'){
                         if($item->status==1){
-                            $buttons .='<a class="btn btn-secondary btn-xs" target="_blank" href="' . route('keterangan.cetak', $item->id) . '">
-                            <i class="fas fa-download"></i> &nbsp; Download
-                            </a>';
-                        }
-                    }
+                            if($item->pegawai){
+                                $buttons .='<a class="btn btn-secondary btn-xs" target="_blank" href="' . route('keterangan.cetak', $item->id) . '">
+                                <i class="fas fa-download"></i> &nbsp; Download
+                                </a>';
+                            } else {
+                              $buttons .='<a class="btn btn-secondary btn-xs" data-bs-toggle="modal" data-bs-target="#pegawai'.$item->id.'">
+                              <i class="fas fa-upload"></i> &nbsp; Input Pegawai
+                              </a>';
+                          }
+                      }
+                  }
 
-                    if($item->status==0 AND auth()->user()->jabatan=='Penghulu'){
-                        $buttons .='<a class="btn btn-secondary btn-xs" href="' . route('keterangan.show', $item->id) . '">
-                        <i class="fas fa-eye"></i> &nbsp; Lihat
-                        </a>';
-                    }
-
-                    if(auth()->user()->jabatan=='Penghulu' AND $item->status==NULL && $item->status !==0){
-                        $buttons.='
-                        <form action="' . route('keterangan.verification', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan memverifikasi surat ini ?'".')">
-                        ' . method_field('post') . csrf_field() . '
-                        <input name="status" value="1" hidden>
-                        <button class="btn btn-primary btn-xs">
-                        Verifikasi
-                        </button>
-                        </form>
-                        <button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#tolak'.$item->id.'">
-                        Tolak
-                        </button>
-                        ';
-                    }
-                    return $buttons;
+                  if($item->status==0 AND auth()->user()->jabatan=='Penghulu'){
+                    $buttons .='<a class="btn btn-secondary btn-xs" href="' . route('keterangan.show', $item->id) . '">
+                    <i class="fas fa-eye"></i> &nbsp; Lihat
+                    </a>';
                 }
-            })
+
+                if(auth()->user()->jabatan=='Petugas' AND $item->status==NULL && $item->status !==0){
+                    $buttons.='
+                    <form action="' . route('keterangan.verification', $item->id) . '" method="POST" onsubmit="return confirm('."'Anda akan memverifikasi surat ini ?'".')">
+                    ' . method_field('post') . csrf_field() . '
+                    <input name="status" value="1" hidden>
+                    <button class="btn btn-primary btn-xs">
+                    Verifikasi
+                    </button>
+                    </form>
+                    <button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#tolak'.$item->id.'">
+                    Tolak
+                    </button>
+                    ';
+                }
+                return $buttons;
+            }
+        })
 
             ->addIndexColumn()
             ->removeColumn('id')
@@ -93,8 +99,11 @@ class KeteranganController extends Controller
         } else {
             $item = Keterangan::with('laki')->latest()->get();
         }
+
+        $pegawai=Pegawai::get();
         return view('pages.admin.keterangan.index',[
-            'item'=>$item
+            'item'=>$item,
+            'pegawai'=>$pegawai
         ]);
     }
 
@@ -157,7 +166,7 @@ class KeteranganController extends Controller
             "pekerjaan_perempuan"=> "required",
             "tempat_lahir_perempuan"=> "required",
             "tgl_lahir_perempuan" => ["required", new MinUmur(17)],
-            "pegawai"=> "required"
+            // "pegawai"=> "required"
         ]);
 
         $dataLakiLaki = array_filter($validatedData, function($key) {
@@ -176,7 +185,6 @@ class KeteranganController extends Controller
 
         Keterangan::create([
             'no_surat'=>'SKNTC/'.date('m').'/'.Keterangan::get()->count().'/'.date('Y'),
-            'nik_pegawai'=>$validatedData['pegawai'],
             'user_id'=>auth()->user()->nik,
             'nik_suami'=>$laki->nik,
             'nik_istri'=>$perempuan->nik,
@@ -228,6 +236,15 @@ class KeteranganController extends Controller
         ]);
     }
 
+    public function pegawai(Request $request,$id)
+    {
+        Keterangan::where('id',$id)->update(['nik_pegawai'=>$request->pegawai]);
+        return redirect()
+        ->route('keterangan.index')
+        ->with('success', 'Sukses! 1 Data Berhasil Disimpan');
+
+    }
+
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
@@ -262,7 +279,6 @@ class KeteranganController extends Controller
         $perempuan=Istri::where('nik',$insertPerempuan['nik'])->update($insertPerempuan);
 
         Keterangan::where('id',$id)->update([
-            'nik_pegawai'=>$validatedData['pegawai'],
             'nik_suami'=>$insertLaki['nik'],
             'nik_istri'=>$insertPerempuan['nik'],
             'status'=>null,
